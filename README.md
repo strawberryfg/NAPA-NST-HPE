@@ -1,2 +1,2 @@
 # NAPA-NST-HPE
-Implementation for "NAPA: Neural Art Human Pose Amplifier" 
+Implementation of "NAPA: Neural Art Human Pose Amplifier" 
