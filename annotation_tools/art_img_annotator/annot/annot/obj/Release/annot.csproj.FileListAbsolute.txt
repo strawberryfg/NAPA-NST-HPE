@@ -1,0 +1,9 @@
+D:\annot\annot\bin\Release\annot.exe.config
+D:\annot\annot\bin\Release\annot.exe
+D:\annot\annot\bin\Release\annot.pdb
+D:\annot\annot\obj\Release\annot.csprojAssemblyReference.cache
+D:\annot\annot\obj\Release\annot.frmannot.resources
+D:\annot\annot\obj\Release\annot.Properties.Resources.resources
+D:\annot\annot\obj\Release\annot.csproj.GenerateResource.cache
+D:\annot\annot\obj\Release\annot.exe
+D:\annot\annot\obj\Release\annot.pdb
