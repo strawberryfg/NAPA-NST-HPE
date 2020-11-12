@@ -2,7 +2,7 @@
 
 Written in C\#. Developed in Visual Studio 2019.
 
-**TO-DO** Add screenshots.
+**TO-DO** Add functionality.
 
 ## Screenshot
 
