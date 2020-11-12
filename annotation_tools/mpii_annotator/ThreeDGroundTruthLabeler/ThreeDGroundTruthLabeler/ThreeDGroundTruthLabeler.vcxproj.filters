@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\HumanModel">
+      <UniqueIdentifier>{4562b533-f2ee-40f7-94fa-0acd71126e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\HumanModel">
+      <UniqueIdentifier>{9da9defb-befa-4741-a0a1-a362465a8741}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_inc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="basic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WeakPerspective.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplayJointOnImage.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientDescent_2d.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="HumanModel_define.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="HumanModel.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="InitConfiguration.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="JointLocationLoss_2d.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="JointLocationLoss_3d.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientDescent_3d.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelOptimization.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="cv_related.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngleConstraintLoss.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectionParamLoss.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PoseConditionedJointAngleLimit_define.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="global2local.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="local2global.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PoseConditionedJointAngleLimitConstraint.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PinholeCamera.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientDescent_2d_pinhole.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="GradientDescent_3d_pinhole.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeConvex.h">
+      <Filter>头文件\HumanModel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreeDGroundTruthLabeler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ogl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WeakPerspective.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayJointOnImage.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="basic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientDescent_2d.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="InitConfiguration.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="JointLocationLoss_2d.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="JointLocationLoss_3d.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelOptimization.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientDescent_3d.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="HumanModel.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="AngleConstraintLoss.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionParamLoss.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PoseConditionedJointAngleLimit_define.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="global2local.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="local2global.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PoseConditionedJointAngleLimitConstraint.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PinholeCamera.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientDescent_3d_pinhole.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="GradientDescent_2d_pinhole.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeConvex.cpp">
+      <Filter>源文件\HumanModel</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
