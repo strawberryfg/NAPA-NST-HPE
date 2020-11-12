@@ -12,3 +12,16 @@
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/tools/*
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabeler/eigen/
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabeler/common/
+*.vshost.application
+*.cache
+*.vshost.exe.config
+*.vshost.exe.manifest
+*.exe.config
+*.exe.manifest
+*.pfx
+*.user
+*.suo
+*.sdf
+*.lock
+*.ide
+*.ipch
