@@ -7,5 +7,5 @@ Written in C\#.
 ## Screenshot
 
 <p align="center">  
-<img src="figs/art_annot.png">  
+<img src="../../figs/art_annot.png">  
 </p> 
