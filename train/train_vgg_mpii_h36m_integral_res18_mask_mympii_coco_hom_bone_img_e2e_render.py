@@ -1,5 +1,5 @@
-st_epoch = 125
-model_str = "124_4"
+st_epoch = 126
+model_str = "125_4"
 folder_prefix = "m118"
 #from nets.balanced_parallel import DataParallelModel, DataParallelCriterion
 on_the_fly_mod = 100
@@ -4187,7 +4187,7 @@ if torch.cuda.is_available():
 #3.    possible loading model load model finetune
 #print(model.state_dict())
 def load_model():
-    integral_model_str = '114_16' #currently the best in terms of 2d pckh
+    integral_model_str = '125_4' #'114_16' #currently the best in terms of 2d pckh
     ckpt = torch.load('resnet50/model256_mpii_ist_' + integral_model_str + '.pth')
     #ckpt = torch.load('snapshot_16.pth.tar')
         #ckpt = ckpt.to(torch.device('cpu'))
@@ -4228,7 +4228,7 @@ def load_model():
     load_my_state_dict(model_2dske, ckpt_2dske)
     
 
-    deconv_model_str = '114_16'
+    deconv_model_str = '125_4' # '114_16'
     ckpt_deconv = torch.load('resnet50/model256_mpii_ist_deconv_'  + deconv_model_str + '.pth')
     
     model_deconv.load_state_dict(ckpt_deconv)
@@ -4824,6 +4824,229 @@ def train(epoch):
             ske_map_proj_loss = ske_map_proj_loss(pred_proj_tsr, gt_proj_tsr)
             print('ske map proj loss ', ske_map_proj_loss)
 
+            #projection ske map (comp) with integral 
+            # from comp bone 3d -> 2d render
+            bone_img_arr_comp = np.zeros((batch_size, img_size, img_size, 3), dtype=np.float32)
+            bone_img_arr_per_bone_comp = np.zeros((batch_size, img_size, img_size, len(myske)), dtype=np.float32)
+            
+            bone_img_arr_oval_comp = np.zeros((batch_size, img_size, img_size, 3), dtype=np.float32)
+            bone_img_arr_per_bone_oval_comp = np.zeros((batch_size, img_size, img_size, len(myske)), dtype=np.float32)
+            
+            use_bone_img = True
+            use_oval = True
+            if use_bone_img:
+                for i in range(batch_size):
+                    coord_out = pred_proj[i] * float(img_size) #[0, 1] * img_size
+                    bone_img_comp = np.zeros((img_size, img_size, 3), dtype=np.float32)
+                    bone_img_oval_comp = np.zeros((img_size, img_size, 3), dtype=np.float32)
+                    for bone in range(len(myske)):
+                        i1 = myske[bone][0]
+                        i2 = myske[bone][1]
+                        b = train_dataset.ske_colors[bone][0]
+                        g = train_dataset.ske_colors[bone][1]
+                        r = train_dataset.ske_colors[bone][2]
+                        x1 = coord_out[i1 * 2 + 0] / float(img_size)
+                        y1 = coord_out[i1 * 2 + 1] / float(img_size)
+                        x2 = coord_out[i2 * 2 + 0] / float(img_size)
+                        y2 = coord_out[i2 * 2 + 1] / float(img_size)
+                        minx = min(x1, x2) 
+                        maxx = max(x1, x2) 
+                        miny = min(y1, y2) 
+                        maxy = max(y1, y2) 
+
+                        minxx = min(x1, x2) - 0.02
+                        maxxx = max(x1, x2) + 0.02
+                        minyy = min(y1, y2) - 0.02
+                        maxyy = max(y1, y2) + 0.02
+                        blank_image_comp = np.zeros((img_size,img_size,1), np.uint8)
+                        blank_image_oval_comp = np.zeros((img_size,img_size,1), np.uint8)
+                        
+                        max_b = 0.5 * math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+                        
+                        if use_oval:
+                            for col in range(0, render_size):
+                                    x = (col + 0.5) / float(render_size);
+                                    if (math.fabs(x - minxx) < eps or math.fabs(x - maxxx) < eps or (x - minxx > eps and maxxx - x > eps)):
+                                        for row in range(0, render_size):
+                                            y = (row + 0.5) / float(render_size)
+                                            if (math.fabs(y - minyy) < eps or math.fabs(y - maxyy) < eps or (y - minyy > eps and maxyy - y > eps)):
+                                            
+                            #for row in range(0, render_size):
+                            #    for col in range(0, render_size):
+                            #        x = (col + 0.5) / float(render_size)
+                            #        y = (row + 0.5) / float(render_size)
+                                    
+                                                dist_2_line = math.fabs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) / math.sqrt(math.pow(y2 - y1, 2) + math.pow(x2 - x1, 2) + 0.0000000000000000001)
+                                                dist_minor_axis = math.pow(x - (x1 + x2) / 2.0, 2) + math.pow(y - (y1 + y2) / 2.0, 2) - math.pow(dist_2_line, 2)
+                                                dist_minor_axis = max(0.0, dist_minor_axis)
+                                                dist_minor_axis = math.sqrt(dist_minor_axis)
+
+                                                dist = math.pow(dist_2_line, 2) / math.pow(max_a, 2) + math.pow(dist_minor_axis, 2) / math.pow(max_b, 2)
+                                                if 1.0 - dist > 1e-6:
+                                                    blank_image_oval_comp[row][col][0] = 1.0 * 255
+                                                    bone_img_oval_comp[row][col][0] += blank_image_oval_comp[row][col][0] / 255.0 * b / 255.0
+                                                    bone_img_oval_comp[row][col][1] += blank_image_oval_comp[row][col][0] / 255.0 * g / 255.0
+                                                    bone_img_oval_comp[row][col][2] += blank_image_oval_comp[row][col][0] / 255.0 * r / 255.0
+                                                    bone_img_arr_oval_comp[i][row][col][0] += bone_img_oval_comp[row][col][0]          
+                                                    bone_img_arr_oval_comp[i][row][col][1] += bone_img_oval_comp[row][col][1]          
+                                                    bone_img_arr_oval_comp[i][row][col][2] += bone_img_oval_comp[row][col][2] 
+                                                
+                                                bone_img_arr_per_bone_oval_comp[i][row][col][bone] = (blank_image_oval_comp[row][col][0] + blank_image_oval_comp[row][col][0] + blank_image_oval_comp[row][col][0]) / 3.0 / 255.0 
+                        
+                        if (math.fabs(x1 - x2) < eps):
+                            for col in range(0, render_size):
+                                x = (col + 0.5) / float(render_size)
+                                for row in range(0, render_size):
+                                    y = (row + 0.5) / float(render_size)
+                                    if (math.fabs(y - miny) < eps or math.fabs(y - maxy) < eps or (y - miny > eps and maxy - y > eps)):
+                                        dsquare1 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(x - x1, 2)
+                                        dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((y - y1) / (y2 - y1), 2)
+                                        blank_image_comp[row][col][0] = math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                        bone_img_comp[row][col][0] += blank_image_comp[row][col][0] / 255.0 * b / 255.0
+                                        bone_img_comp[row][col][1] += blank_image_comp[row][col][0] / 255.0 * g / 255.0
+                                        bone_img_comp[row][col][2] += blank_image_comp[row][col][0] / 255.0 * r / 255.0
+                                        bone_img_arr_comp[i][row][col][0] += bone_img_comp[row][col][0]          
+                                        bone_img_arr_comp[i][row][col][1] += bone_img_comp[row][col][1]          
+                                        bone_img_arr_comp[i][row][col][2] += bone_img_comp[row][col][2] 
+                                    bone_img_arr_per_bone_comp[i][row][col][bone] = (blank_image_comp[row][col][0] + blank_image_comp[row][col][0] + blank_image_comp[row][col][0]) / 3.0 / 255.0       
+                                  
+                        elif (math.fabs(y1 - y2) < eps):
+                            for row in range(0, render_size):
+                                y = (row + 0.5) / float(render_size)
+                                for col in range(0, render_size):
+                                    x = (col + 0.5) / float(render_size)
+                                    if (math.fabs(x - minx) < eps or math.fabs(x - maxx) < eps or (x - minx > eps and maxx - x > eps)):
+                                        dsquare1 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(y - y1, 2)
+                                        dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((x - x1) / (x2 - x1), 2)
+                                        blank_image_comp[row][col][0] = math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                        bone_img_comp[row][col][0] += blank_image_comp[row][col][0] / 255.0 * b / 255.0
+                                        bone_img_comp[row][col][1] += blank_image_comp[row][col][0] / 255.0 * g / 255.0
+                                        bone_img_comp[row][col][2] += blank_image_comp[row][col][0] / 255.0 * r / 255.0
+                                        bone_img_arr_comp[i][row][col][0] += bone_img_comp[row][col][0]          
+                                        bone_img_arr_comp[i][row][col][1] += bone_img_comp[row][col][1]          
+                                        bone_img_arr_comp[i][row][col][2] += bone_img_comp[row][col][2] 
+                                    bone_img_arr_per_bone_comp[i][row][col][bone] = (blank_image_comp[row][col][0] + blank_image_comp[row][col][0] + blank_image_comp[row][col][0]) / 3.0 / 255.0       
+                        else:
+                            A = (y2 - y1) / (x2 - x1)
+                            B = -1.0
+                            C = y1 - A * x1
+                            for col in range(0, render_size):
+                                x = (col + 0.5) / float(render_size);
+                                if (math.fabs(x - minx) < eps or math.fabs(x - maxx) < eps or (x - minx > eps and maxx - x > eps)):
+                                    for row in range(0, render_size):
+                                        y = (row + 0.5) / float(render_size)
+                                        if (math.fabs(y - miny) < eps or math.fabs(y - maxy) < eps or (y - miny > eps and maxy - y > eps)):
+                                            dsquare0 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(A * x + B * y + C, 2) / (math.pow(A, 2) + math.pow(B, 2))
+                                            dsquare1 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((x - x1) / (x2 - x1), 2)
+                                            dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((y - y1) / (y2 - y1), 2)
+                                            blank_image_comp[row][col][0] = math.exp(dsquare0) * math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                            bone_img_comp[row][col][0] += blank_image_comp[row][col][0] / 255.0 * b / 255.0
+                                            bone_img_comp[row][col][1] += blank_image_comp[row][col][0] / 255.0 * g / 255.0
+                                            bone_img_comp[row][col][2] += blank_image_comp[row][col][0] / 255.0 * r / 255.0
+                        
+                                            bone_img_arr_comp[i][row][col][0] += bone_img_comp[row][col][0]          
+                                            bone_img_arr_comp[i][row][col][1] += bone_img_comp[row][col][1]          
+                                            bone_img_arr_comp[i][row][col][2] += bone_img_comp[row][col][2]        
+                                        
+                                        bone_img_arr_per_bone_comp[i][row][col][bone] = (blank_image_comp[row][col][0] + blank_image_comp[row][col][0] + blank_image_comp[row][col][0]) / 3.0 / 255.0 
+                    cv2.imshow("blank_comp", bone_img_arr_comp[i])
+                    cv2.waitKey(1)
+                    if use_oval:
+                        cv2.imshow("blank_oval_comp", bone_img_arr_oval_comp[i])
+                        cv2.waitKey(1)
+                        
+                # Bone img concatenate style -> deconv a stylized image
+                # [0, 1] -> std mean normalize it
+                pre_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=pixel_mean, std=pixel_std)])
+                bone_img_arr_comp = bone_img_arr_comp.transpose(0,3,1,2)
+                if use_oval:
+                    bone_img_arr_oval_comp = bone_img_arr_oval_comp.transpose(0,3,1,2)
+                
+
+            # the original gt ske (old-fashioned)
+            # 7. Generate ground truth skeleton
+            ske_img_arr_comp = np.zeros((batch_size, 3, img_size, img_size), dtype=np.float32)
+            
+            for i in range(batch_size):
+                coord_out = pred_proj[i] * float(img_size) #[0, 1] * img_size
+                    
+                pred_ske_comp = np.zeros((img_size, img_size, 3),dtype=np.uint8)
+            
+                for j in range(len(myske)):
+                    i1 = myske[j][0]
+                    i2 = myske[j][1]
+                    
+                    x1 = coord_out[i1 * 2 + 0]
+                    y1 = coord_out[i1 * 2 + 1]
+                    x2 = coord_out[i2 * 2 + 0]
+                    y2 = coord_out[i2 * 2 + 1]
+                    
+
+                
+                    if joint_vis[i][i1] == 1 and joint_vis[i][i2] == 1:
+                        #print(x1, y1, '    ===>    ', x2, y2)
+                        cv2.line(
+                        pred_ske_comp, (x1.astype(np.int32), y1.astype(np.int32)), (x2.astype(np.int32), y2.astype(np.int32)),
+                        color=train_dataset.ske_colors[j], thickness=3, lineType=cv2.LINE_AA)
+                        #print('connecting ', j, 'done')
+                pred_ske_comp_ = cv2.resize(pred_ske_comp, (512, 512))
+                    
+                #cv2.imshow("pred_ske", pred_ske_)
+                #cv2.waitKey(0)
+                #cv2.imshow("pred_ske", pred_ske)
+                #cv2.waitKey(0)
+                #3xSxS
+                pred_ske_comp = pred_ske_comp.transpose((2, 0, 1))
+                pred_ske_out_comp = np.zeros((3, img_size, img_size),dtype=np.float32)
+                pred_ske_out_comp[:, :, :] = pred_ske_comp[:, :, :] / 255.0
+                ske_img_arr_comp[i] = pred_ske_out_comp
+                #print(i,' is done')
+
+
+
+            #transform
+            if use_bone_img:
+                for i in range(batch_size):
+                    cur_img_comp = bone_img_arr_comp[i].transpose(1,2,0)
+                    bone_img_arr_comp[i] = pre_transforms(cur_img_comp)
+
+                    if use_oval:
+                        cur_img_oval_comp = bone_img_arr_oval_comp[i].transpose(1,2,0)
+                        bone_img_arr_oval_comp[i] = pre_transforms(cur_img_oval_comp)
+
+                bone_img_arr_comp = torch.from_numpy(bone_img_arr_comp).cuda()
+                if use_oval:
+                    bone_img_arr_oval_comp = torch.from_numpy(bone_img_arr_oval_comp).cuda()
+
+                bone_img_arr_per_bone_comp = bone_img_arr_per_bone_comp.transpose(0,3,1,2)
+                bone_img_arr_per_bone_comp = torch.from_numpy(bone_img_arr_per_bone_comp).cuda()
+
+                if use_oval:
+                    bone_img_arr_per_bone_oval_comp = bone_img_arr_per_bone_oval_comp.transpose(0,3,1,2)
+                    bone_img_arr_per_bone_oval_comp = torch.from_numpy(bone_img_arr_per_bone_oval_comp).cuda()
+
+            ske_img_arr_comp = torch.from_numpy(ske_img_arr_comp).cuda()
+            #1.
+            loss_bone_img_arr_per_bone_oval = nn.SmoothL1Loss()
+            loss_bone_img_arr_per_bone_oval = loss_bone_img_arr_per_bone_oval(bone_img_arr_per_bone_oval, bone_img_arr_per_bone_oval_comp)
+
+            #2.
+            loss_bone_img_arr_per_bone = nn.SmoothL1Loss()
+            loss_bone_img_arr_per_bone = loss_bone_img_arr_per_bone(bone_img_arr_per_bone, bone_img_arr_per_bone_comp)
+
+            #3.
+            loss_bone_img_arr_oval = nn.SmoothL1Loss()
+            loss_bone_img_arr_oval = loss_bone_img_arr_oval(bone_img_arr_oval, bone_img_arr_oval_comp)
+
+            #4.
+            loss_bone_img_arr = nn.SmoothL1Loss()
+            loss_bone_img_arr = loss_bone_img_arr(bone_img_arr, bone_img_arr_comp)
+
+            #5.
+            loss_ske_img_arr = nn.SmoothL1Loss()
+            loss_ske_img_arr = loss_ske_img_arr(ske_img_arr, ske_img_arr_comp)
+            
+            
 
 
             #visualize in 2d
@@ -5220,7 +5443,18 @@ def train(epoch):
             # comp bone 3d proj from (integral) ske map
             #    compare with gt 2d
             loss += Rho * ske_map_proj_loss
+            print('loss_bone_img_arr_per_bone_oval: ', loss_bone_img_arr_per_bone_oval)
+            print('loss_bone_img_arr_per_bone       ', loss_bone_img_arr_per_bone)
+            print('loss_bone_img_arr_oval           ', loss_bone_img_arr_oval)
+            print('loss_bone_img_arr                ', loss_bone_img_arr)
+            print('loss_ske_img_arr                 ', loss_ske_img_arr)
 
+            Bne = 100
+            loss += Bne * loss_bone_img_arr_per_bone_oval
+            loss += Bne * loss_bone_img_arr_per_bone
+            loss += Bne * loss_bone_img_arr_oval
+            loss += Bne * loss_bone_img_arr
+            loss += Bne * loss_ske_img_arr
             #delta_selfsup * style_self_sup_ent_loss 
             #+ mu_selfsup * content_self_sup_ent_loss + 
             #loss = jnt_loss
