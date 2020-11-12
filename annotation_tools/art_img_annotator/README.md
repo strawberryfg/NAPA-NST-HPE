@@ -1,6 +1,6 @@
 # Artistic Image Annotator
 
-Written in C\#.
+Written in C\#. Developed in Visual Studio 2019.
 
 **TO-DO** Add screenshots.
 
