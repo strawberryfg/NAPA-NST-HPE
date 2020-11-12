@@ -9,6 +9,7 @@
 *.tlog
 *.idb
 *.txt
+*.lib
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/tools/*
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabeler/eigen/
 annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabeler/common/
