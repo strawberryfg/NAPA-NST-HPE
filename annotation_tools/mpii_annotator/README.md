@@ -38,3 +38,11 @@ Download [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) and place
   annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabeler/eigen/
 
 ```
+
+## Usage
+
+1. ##### 3d annotation #####
+
+	Use a forward kinematics human model with 2D reprojection error as an intial objective function to obatain a rough estimate of 3D keypoints that matche the 2D (given by MPII) ground truth of one frame.
+	
+	Let the user interact with keyboard and mouse to make minor changes to a specific keypoint, and visualize 3D in OpenGL; 2D in OpenCV. Provided real-time visualization to reflect up-to-date 3D keypoint location changes.
