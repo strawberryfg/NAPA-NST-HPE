@@ -34,7 +34,7 @@ Written in C\#. Developed in Visual Studio 2019.
 
 3. ##### next image #####
    Press **+**
-4. ##### last image #####
+4. ##### previous image #####
    Press **-**
 5. ##### navigate to arbitrary image #####
    Enter image index in the box **Current Image Index**, then hit *enter* 
