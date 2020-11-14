@@ -47,6 +47,15 @@ Download tools (*freeglut-2.8.1*, *glew-1.10.0*, *glm-0.9.5.4*, *glm-0.9.5.4*, *
 
 ```
 
+Download annotation data and images from this [link](https://drive.google.com/drive/folders/1ZNnEt4EQ5SZSTalJdsmUikMOR6ZLCkpS?usp=sharing) and set it as 
+*working directory* using the C# interface under *Basic* tab.
+
+
+```
+  Set Working Directory: 
+
+```
+
 Build the c++ project *ThreeDGroundTruthLabeler* using *Release Win32* mode.
 
 Build the C# project *ParameterSetttingUI* using *Release* mode.
