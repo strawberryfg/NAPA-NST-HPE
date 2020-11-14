@@ -25,3 +25,7 @@ A detailed report is in this pdf **2D Human Pose Dataset 3D Joint Location Groun
 <p align="center">  
 <img src="../../figs/mpii_annot_param1.png">  
 </p> 
+
+## Environment
+
+Developed in Visual Studio 2013. Compatible with Visual Studio 2019.
