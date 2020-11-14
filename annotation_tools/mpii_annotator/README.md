@@ -47,7 +47,9 @@ Download tools (*freeglut-2.8.1*, *glew-1.10.0*, *glm-0.9.5.4*, *glm-0.9.5.4*, *
 
 ```
 
-Build the project *ThreeDGroundTruthLabeler* using *Release Win32* mode.
+Build the c++ project *ThreeDGroundTruthLabeler* using *Release Win32* mode.
+
+Build the C# project *ParameterSetttingUI* using *Release* mode.
 
 ## Usage
 
