@@ -21,7 +21,7 @@ The structure:
 
 ``` shell
 ${DATA_ROOT}
-|-- datasetse
+|-- datasets
 `-- |-- allstyles
     |   |   |   | ### All the artistic style images
 `-- |-- h36m
@@ -34,6 +34,7 @@ ${DATA_ROOT}
 `-- |-- mpii
     `-- |-- annotations
     `-- |-- images
+    |   |   | ### For the above two folders please refer to "https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation" for details
     `-- |-- img
     |   |   |   | ### Cropped images for pseudo 3D ground truth annotation
     `-- |-- gt_joint_3d_train_all.txt
