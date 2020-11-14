@@ -56,3 +56,15 @@ Build the project *ThreeDGroundTruthLabeler* using *Release Win32* mode.
 	Used a forward kinematics human model with 2D reprojection error as an intial objective function to obatain a rough estimate of 3D keypoints that matche the 2D (given by MPII) ground truth of one frame.
 	
 	Let the user interact with keyboard and mouse to make minor changes to a specific keypoint, and visualize 3D in OpenGL; 2D in OpenCV. Provided real-time visualization to reflect up-to-date 3D keypoint location changes.
+
+2. ##### enabled constraints to facilitate the annotation process ####
+
+	Offered constraints e.g. *pose-conditioned joint angle limit*, *joint angle lower/upper bound* to ensure the pose validity. 
+	
+	One might choose the joints to be considered in the objective function.
+	
+	One might change the initial DoF parameter. 
+	
+	For some DoF, there is an option to use the initial parameter instead of learnable parameter.
+	
+	With constraints above, it's convenient to perform a hierarchical optimization, where torso joints are lined up first and then upper/lower body joints are aligned further.
