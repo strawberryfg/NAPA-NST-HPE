@@ -11,9 +11,9 @@ Written in C\#. Developed in Visual Studio 2019.
 
 ## Usage
 
-1. ###### head bounding box ######
+1. ##### head bounding box #####
    Click **DRAW HEAD2 (corner pt)** once at left-top of head (```(bbx_x1, bbx_y1)```), click **DRAW HEAD2 (corner pt)** again at bottom-right of head (```(bbx_x2, bbx_y2)```), a **green** bounding box surrounding the head will appear.
-2. ###### 2d keypoints ######
+2. ##### 2d keypoints #####
    Click the number **0-16** to indicate which joint to annotate, then click at the position of that joint. Some edges between consecutive (nearby) joints in the kinematic chain will show along the way. Edges related to left part of the body are in **red**, edges related to right part of the body are in **blue**.
 *0: pelvis*
 *1: right hip*
@@ -32,12 +32,12 @@ Written in C\#. Developed in Visual Studio 2019.
 *16: right wrist*
 *17: thorax*
 
-3. ###### next image ######
+3. ##### next image #####
    Press **+**
-4. ###### last image ######
+4. ##### last image #####
    Press **-**
-5. ###### navigate to arbitrary image #####
+5. ##### navigate to arbitrary image #####
    Enter image index in the box **Current Image Index**, then hit *enter* 
-6. ###### shift to any keypoint #####
+6. ##### shift to any keypoint #####
    Similarly, enter joint index in the box **Current Joint Index**, then hit *enter*
 
