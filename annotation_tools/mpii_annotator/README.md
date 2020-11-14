@@ -39,7 +39,15 @@ Download [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) and place
 
 ```
 
-Download tools (*freeglut-2.8.1*, *glew-1.10.0*, *glm-0.9.5.4*, *glm-0.9.5.4*, *opencv-3.0.0*) from [here](https://drive.google.com/drive/folders/15DUHqhOdsQfq6G6zGNMIWkwRGgjRVCNC?usp=sharing)
+Download tools (*freeglut-2.8.1*, *glew-1.10.0*, *glm-0.9.5.4*, *glm-0.9.5.4*, *opencv-3.0.0*) from [here](https://drive.google.com/drive/folders/15DUHqhOdsQfq6G6zGNMIWkwRGgjRVCNC?usp=sharing) and place under 
+
+
+```
+  annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/tools/*
+
+```
+
+Build the project *ThreeDGroundTruthLabeler* using *Release Win32* mode.
 
 ## Usage
 
