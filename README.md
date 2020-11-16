@@ -42,3 +42,9 @@ ${DATA_ROOT}
 `-- |-- testset
 
 ```
+
+----
+
+## Stylized Results
+
+We show style transferred images for human pose dataset MPII below.
