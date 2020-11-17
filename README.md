@@ -6,6 +6,7 @@ Implementation of "NAPA: Neural Art Human Pose Amplifier"
 <p align="center">  
 <img src="figs/pipeline.png">  
 </p> 
+
 ----
 
 ## Training
