@@ -1,17 +1,12 @@
 #from nets.balanced_parallel import DataParallelModel, DataParallelCriterion
-folder_prefix = 'm116_4'
-model_str = "116_4"
+folder_prefix = 'm135_16'
+model_str = "135_16"
 import math
 import random
 import torch
 
 from datetime import datetime
 from collections import defaultdict
-
-# 0. Data Source Macros
-HUMAN36M = 0
-MPII = 1
-MYMPII = 2
 
 random.seed(datetime.now())
 import os
@@ -22,6 +17,235 @@ import cv2
 import torchvision.transforms as transforms
 import torch.nn as nn
 from matplotlib.pyplot import *
+
+
+#Compositional Part
+std_neg_gt_thorax_arr = np.array([0.099808, 0.114870, 0.363336])
+avg_neg_gt_thorax_arr = np.array([0.001901, -0.253125, -1.955116])
+avg_gt_bone_arr = np.array([-0.011002,
+0.203671,
+0.054641,
+0.011081,
+0.241752,
+-0.001770,
+0.035494,
+0.000022,
+-0.000552,
+-0.035496,
+-0.000032,
+0.000544,
+-0.016262,
+0.241034,
+-0.004212,
+0.007038,
+0.205022,
+0.052795,
+0.000471,
+0.380163,
+-0.019875,
+-0.001045,
+-0.044337,
+0.000661,
+-0.002024,
+-0.186339,
+0.033024,
+-0.016583,
+0.073317,
+-0.048659,
+0.015415,
+0.171697,
+0.002787,
+0.066536,
+0.000573,
+-0.002698,
+-0.066538,
+-0.000564,
+0.002683,
+-0.016018,
+0.175343,
+0.003213,
+0.013102,
+0.079182,
+-0.050601])#.reshape((15,3))
+
+std_gt_bone_arr = np.array([0.123118,
+0.121942,
+0.124030,
+0.143290,
+0.135595,
+0.158152,
+0.063711,
+0.022660,
+0.064554,
+0.063710,
+0.022652,
+0.064557,
+0.141042,
+0.135641,
+0.160715,
+0.121440,
+0.121611,
+0.124870,
+0.138395,
+0.113654,
+0.128882,
+0.024645,
+0.026819,
+0.040076,
+0.105419,
+0.078530,
+0.096968,
+0.122277,
+0.123592,
+0.155742,
+0.098509,
+0.089480,
+0.122735,
+0.117091,
+0.046648,
+0.205375,
+0.117087,
+0.046648,
+0.205378,
+0.095904,
+0.086500,
+0.121688,
+0.121242,
+0.120674,
+0.155680])#.reshape((15,3))
+
+def unnorm_neg_thorax(neg_thorax):
+    ret = neg_thorax[:,:] * std_neg_gt_thorax_arr[:] + avg_neg_gt_thorax_arr[:]
+    return ret 
+
+def unnorm_bone(norm_bone):
+    ret = norm_bone[:,:] * std_gt_bone_arr[:] + avg_gt_bone_arr[:]
+    return ret
+
+def bone2joint(bottom_data):
+    top_data = np.zeros((bottom_data.shape[0], 18 * 3), dtype=np.float)
+    for t in range(bottom_data.shape[0]):
+        for i in range(18):
+            x = i
+            while x != thorax:
+                cur_bone = int(which_bone[x][int(parent[x])])
+                for j in range(3):
+                    top_data[t][i * 3 + j] += -bottom_data[t][cur_bone * 3 + j]
+                x = int(parent[x])            
+                                        
+               
+    return top_data
+
+def pinhole_proj(bottom_data):
+    top_data = np.zeros((bottom_data.shape[0], 18 * 2), dtype=np.float)
+    size = 224
+    focus = 300
+    for t in range(bottom_data.shape[0]):
+        for i in range(18):    
+            x = bottom_data[t][i * 3]
+            y = bottom_data[t][i * 3 + 1]
+            z = bottom_data[t][i * 3 + 2]
+            top_data[t][i * 2] = focus * x / z / size + 0.5
+            top_data[t][i * 2 + 1] = -focus * y / z / size + 0.5
+    return top_data
+
+#Compositional Bone Pose Regeression
+pelvis = 0     #0
+right_hip = 1      #1  
+right_knee = 2     #2
+right_ankle = 3    #3 
+left_hip = 4      #4 
+left_knee = 5     #5
+left_ankle = 6    #6
+upper_neck = 8       #8
+head_top = 10       #10 
+left_shoulder = 11 #11
+left_elbow = 12    #12
+left_wrist = 13   #13
+right_shoulder = 14 #14 
+right_elbow = 15    #15
+right_wrist = 16    #16
+thorax = 17     #17
+parent = np.zeros((18))
+parent[right_ankle] = right_knee;
+parent[right_knee] = right_hip;
+parent[right_hip] = pelvis;
+parent[pelvis] = thorax;
+parent[thorax] = -1;
+parent[left_ankle] = left_knee;
+parent[left_knee] = left_hip;
+parent[left_hip] = pelvis;
+parent[right_wrist] = right_elbow;
+parent[right_elbow] = right_shoulder;
+parent[right_shoulder] = thorax;
+parent[left_wrist] = left_elbow;
+parent[left_elbow] = left_shoulder;
+parent[left_shoulder] = thorax;
+parent[head_top] = upper_neck;
+parent[upper_neck] = thorax;
+BoneBasedBoneNum = 15
+
+
+right_ankle_mpii = 0
+right_knee_mpii = 1
+right_hip_mpii = 2
+left_hip_mpii = 3
+left_knee_mpii = 4
+left_ankle_mpii = 5
+pelvis_mpii = 6
+thorax_mpii = 7
+upper_neck_mpii = 8
+head_top_mpii = 9
+right_wrist_mpii = 10
+right_elbow_mpii = 11
+right_shoulder_mpii = 12
+left_shoulder_mpii = 13
+left_elbow_mpii = 14
+left_wrist_mpii = 15
+
+
+
+bones_mpii =(
+            ( right_ankle_mpii, right_knee_mpii ),     #0
+            ( right_knee_mpii, right_hip_mpii ),       #1
+            ( right_hip_mpii, pelvis_mpii ),           #2
+            ( left_hip_mpii, pelvis_mpii ),            #3 
+            ( left_knee_mpii, left_hip_mpii ),         #4
+            ( left_ankle_mpii, left_knee_mpii ),       #5
+            ( pelvis_mpii, thorax_mpii ),              #6
+            ( upper_neck_mpii, thorax_mpii ),          #7
+            ( head_top_mpii, upper_neck_mpii ),        #8
+            ( right_wrist_mpii, right_elbow_mpii ),    #9
+            ( right_elbow_mpii, right_shoulder_mpii ), #10
+            ( right_shoulder_mpii, thorax_mpii ),      #11
+            ( left_shoulder_mpii, thorax_mpii ),       #12
+            ( left_elbow_mpii, left_shoulder_mpii ),   #13
+            ( left_wrist_mpii, left_elbow_mpii )       #14
+        )
+
+
+
+bones =(
+            ( right_ankle, right_knee ),     #0
+            ( right_knee, right_hip ),       #1
+            ( right_hip, pelvis ),           #2
+            ( left_hip, pelvis ),            #3 
+            ( left_knee, left_hip ),         #4
+            ( left_ankle, left_knee ),       #5
+            ( pelvis, thorax ),              #6
+            ( upper_neck, thorax ),          #7
+            ( head_top, upper_neck ),        #8
+            ( right_wrist, right_elbow ),    #9
+            ( right_elbow, right_shoulder ), #10
+            ( right_shoulder, thorax ),      #11
+            ( left_shoulder, thorax ),       #12
+            ( left_elbow, left_shoulder ),   #13
+            ( left_wrist, left_elbow )       #14
+        )
+
+which_bone = np.zeros((18, 18))
+for i in range(BoneBasedBoneNum):
+    which_bone[bones[i][0]][bones[i][1]] = i;
 
 
 
@@ -117,7 +341,7 @@ output_shape = img_size // 4
 bbox_3d_shape = (2000, 2000, 2000) # depth, height, width
 depth_dim = 64
     
-batch_size = 4
+batch_size = 10
 pixel_mean = (0.485, 0.456, 0.406)
 pixel_std = (0.229, 0.224, 0.225)
 
@@ -134,24 +358,7 @@ vis_dir = "vis/"
 
 # 0. read kernel imgs
 
-#Kernel imgs
-ker_imgs = []
-ker_imgs_num = 8
-for i in range(ker_imgs_num):
-    this_ker = []
-    ker = cv2.imread('kernels/' + str(i) + '.png', cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
-    ker = cv2.resize(ker, (img_size, img_size))
-    ker = ker[:,:,::-1].copy()
-    ker = ker / 255.0
-    ker = ker.transpose((2, 0, 1))
-    ker = ker.astype(np.float32)
-
-    for j in range(batch_size):
-        this_ker.append(ker)
-    this_ker = np.asarray(this_ker)
-    
-    ker_imgs.append(this_ker)
-ker_imgs = np.asarray(ker_imgs)
+#
 #ker_imgs = torch.from_numpy(ker_imgs)
 #print(ker_imgs.shape)
 #print(ker_imgs.type)
@@ -230,8 +437,8 @@ def vis_mapping_cylinder(cylinder):
     #ax.set_zlim([-input_shape[0],0])
     ax.legend()
 
-    plt.show()
-    cv2.waitKey(0)
+    #plt.show()
+    #cv2.waitKey(0)
 
 
 def vis_3dske(ske3d, kps_lines,):
@@ -259,11 +466,11 @@ def vis_3dske(ske3d, kps_lines,):
     #ax.set_zlim([-input_shape[0],0])
     ax.legend()
 
-    plt.show()
-    cv2.waitKey(0)
+    #plt.show()
+    #cv2.waitKey(0)
 
-
-def vis_3d_skeleton(kpt_3d, kpt_3d_vis, kps_lines, filename=None):
+plt_show_wait = False
+def vis_3d_skeleton(kpt_3d, kpt_3d_vis, kps_lines, filename=None, plt_show_wait = False):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -304,10 +511,12 @@ def vis_3d_skeleton(kpt_3d, kpt_3d_vis, kps_lines, filename=None):
     #ax.set_zlim([-input_shape[0],0])
     ax.legend()
 
-    #plt.show()
+    if plt_show_wait:
+        print(1)
+        plt.show()
     plt.savefig(filename)
     
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
     
 
 
@@ -349,20 +558,6 @@ def pixel2cam(pixel_coord, f, c):
     z = pixel_coord[:, 2]
     #print('z', z)
     return x, y, z
-
-
-def rigid_transform_3D(A, B):
-    centroid_A = np.mean(A, axis = 0)
-    centroid_B = np.mean(B, axis = 0)
-    H = np.dot(np.transpose(A - centroid_A), B - centroid_B)
-    U, s, V = np.linalg.svd(H)
-    R = np.dot(np.transpose(V), np.transpose(U))
-    if np.linalg.det(R) < 0:
-        V[2] = -V[2]
-        R = np.dot(np.transpose(V), np.transpose(U))
-    t = -np.dot(R, np.transpose(centroid_A)) + np.transpose(centroid_B)
-    return R, t
-
 
 def rigid_align(A, B):
     R, t = rigid_transform_3D(A, B)
@@ -1266,9 +1461,9 @@ class MPII:
 
     def __init__(self, data_split):
         self.data_split = data_split
-        self.img_dir = osp.join('../', 'datasets', 'mpii')
-        self.train_annot_path = osp.join('../', 'datasets', 'mpii', 'annotations', 'train.json')
-        self.test_annot_path = osp.join('../', 'datasets', 'mpii', 'annotations', 'test.json')
+        self.img_dir = osp.join('mpii')
+        self.train_annot_path = osp.join('mpii', 'annotations', 'train.json')
+        self.test_annot_path = osp.join('mpii', 'annotations', 'test.json')
         self.joint_num = 16
         self.joints_name = ('R_Ankle', 'R_Knee', 'R_Hip', 'L_Hip', 'L_Knee', 'L_Ankle', 'Pelvis', 'Thorax', 'Neck', 'Head', 'R_Wrist', 'R_Elbow', 'R_Shoulder', 'L_Shoulder', 'L_Elbow', 'L_Wrist')
         self.flip_pairs = ( (0, 5), (1, 4), (2, 3), (10, 15), (11, 14), (12, 13) )
@@ -1352,14 +1547,38 @@ class MPII:
 import scipy.io as sio
 import scipy as sp
 
+
 class Human36M:
     def __init__(self, data_split, spl_ratio = 64, subject_list = [1, 5, 6, 7, 8], action_idx = (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16), subaction_idx = (1, 2), camera_idx = (1, 2, 3, 4)):
         self.data_split = data_split
         self.data_dir = "D:/h36m/H36MDemo/SET_YOUR_OUTPUT_DIRECTORY/" #
+        #"C:/Users/h36m/H36MDemo/SET_YOUR_OUTPUT_DIRECTORY/" 
+        #osp.join('../', 'data', 'Human36M', 'data')
+        
         self.spl_ratio = spl_ratio
         self.subsampling = self.get_subsampling_ratio(data_split)
         self.joint_num = 18
-        self.joints_name = ('Pelvis', 'R_Hip', 'R_Knee', 'R_Ankle', 'L_Hip', 'L_Knee', 'L_Ankle', 'Torso', 'Neck', 'Nose', 'Head', 'L_Shoulder', 'L_Elbow', 'L_Wrist', 'R_Shoulder', 'R_Elbow', 'R_Wrist', 'Thorax')
+        self.joints_name = (
+            'Pelvis',     #0
+            'R_Hip',      #1  
+            'R_Knee',     #2
+            'R_Ankle',    #3 
+            'L_Hip',      #4 
+            'L_Knee',     #5
+            'L_Ankle',    #6
+            'Torso',      #7
+            'Neck',       #8
+            'Nose',       #9
+            'Head',       #10 
+            'L_Shoulder', #11
+            'L_Elbow',    #12
+            'L_Wrist',    #13
+            'R_Shoulder', #14 
+            'R_Elbow',    #15
+            'R_Wrist',    #16
+            'Thorax')     #17
+
+
         self.flip_pairs = ( (1, 4), (2, 5), (3, 6), (14, 11), (15, 12), (16, 13) )
         self.skeleton = ( (0, 7), (7, 8), (8, 9), (9, 10), (8, 11), (11, 12), (12, 13), (8, 14), (14, 15), (15, 16), (0, 1), (1, 2), (2, 3), (0, 4), (4, 5), (5, 6) )
         self.lr_skeleton = ( ((8,11),(8,14)), ((11,12),(14,15)), ((12,13),(15,16)), ((0,1),(0,4)), ((1,2),(4,5)), ((2,3),(5,6)) )
@@ -1422,7 +1641,7 @@ class Human36M:
         if data_split == 'train':
             folders = self._AllHuman36Folders(self.subject_list)
         elif data_split == 'test':
-            folders = self._AllHuman36Folders([9])
+            folders = self._AllHuman36Folders([9, 11])
         else:
             print("Unknown subset")
             assert 0
@@ -1453,7 +1672,10 @@ class Human36M:
                 #print('hahahhaha------------')
                 img_width = img_widths[n]
                 img_height = img_heights[n]
-                
+                joint_depth = np.zeros((self.joint_num),dtype=np.float32)
+                joint_bone = np.zeros((BoneBasedBoneNum * 3), dtype=np.float)
+                neg_thorax = np.zeros((3), dtype=np.float)
+            
                 data.append({
                     'img_path': img_path,
                     'bbox': bbox, 
@@ -1463,7 +1685,10 @@ class Human36M:
                     'center_cam': center_cam, # [X, Y, Z] in camera coordinate
                     'f': f,
                     'c': c,
-                    'data_source':np.array([0], dtype=np.float32)
+                    'data_source': np.array([0], dtype=np.float32),
+                    'joint_depth': joint_depth,
+                    'joint_bone':  joint_bone, #dummy value
+                    'neg_thorax':  neg_thorax #gt neg thorax
                 })
 
         return data
@@ -1475,13 +1700,11 @@ class Human36M:
 
         gts = self.load_data()
 
-        #assert len(gts) == len(preds)
+        assert len(gts) == len(preds)
 
         sample_num = len(gts)
         joint_num = self.joint_num
-        print(sample_num)
-        print(np.array(gts).shape)
-        print(len(preds))
+        
         p1_error = np.zeros((sample_num, joint_num, 3)) # PA MPJPE (protocol #1 metric)
         p2_error = np.zeros((sample_num, joint_num, 3)) # MPJPE (protocol #2 metroc)
         p1_error_action = [ [] for _ in range(len(self.action_idx)) ] # PA MPJPE for each action
@@ -1519,7 +1742,6 @@ class Human36M:
             vis = False
             if vis:
                 vis_3d_skeleton(pre_3d_kpt, gt_vis, self.skeleton, filename)
-
             # root joint alignment
             pre_3d_kpt = pre_3d_kpt - pre_3d_kpt[self.root_idx]
             gt_3d_kpt  = gt_3d_kpt - gt_3d_kpt[self.root_idx]
@@ -1605,6 +1827,9 @@ class Human36M:
         f_eval_result.write('\n')
         f_eval_result.close()
 
+
+
+
 # class for jointdataset eval
         
 class JointDatasetEval(Dataset):
@@ -1636,9 +1861,9 @@ class JointDatasetEval(Dataset):
         self.dataset_len = 94
 
         self.is_train = is_train
-        self.style_path_prefix = "../datasets/allstyles/"
+        self.style_path_prefix = "allstyles/"
         self.style_path_suffix = ".png"
-        self.content_path_prefix = "../datasets/testset/"
+        self.content_path_prefix = "testset/"
         self.content_path_suffix = '.png'
         self.transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=pixel_mean, std=pixel_std)])
         self.do_aug = False
@@ -1760,7 +1985,7 @@ class JointDatasetEval(Dataset):
 # class for jointdataset
 
 gt_mapping_cylinder = np.zeros((depth_dim, output_shape, output_shape),dtype=np.float32)
-           
+        
 class JointDataset(Dataset):
     def __init__(self, db, is_train):
         
@@ -1789,7 +2014,7 @@ class JointDataset(Dataset):
             self.dataset_len = len(self.db)
 
         self.is_train = is_train
-        self.style_path_prefix = "../datasets/allstyles/"
+        self.style_path_prefix = "allstyles/"
         self.style_path_suffix = ".png"
         self.transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=pixel_mean, std=pixel_std)])
         if self.is_train:
@@ -1800,7 +2025,7 @@ class JointDataset(Dataset):
         
         self.id_styles = []
         self.lbd_styles = 0
-        self.ubd_styles = 109
+        self.ubd_styles = 51
         for i in range(self.dataset_len):
             self.id_styles.append(random.randint(self.lbd_styles, self.ubd_styles))
         
@@ -1872,8 +2097,7 @@ class JointDataset(Dataset):
             raise IOError("Fail to read %s" % data['img_path'])
         img_height, img_width, img_channels = content_img.shape
         content_img = content_img / 255.0
-        #cv2.imshow("s",content_img)
-        #cv2.waitKey(1)
+        
         #2. get aug params
         if self.do_aug:
             scale, rot, do_flip, color_scale = get_aug_config()
@@ -1883,7 +2107,6 @@ class JointDataset(Dataset):
         # Read bbx (especially for mpii) to crop the patches
         bbox = data['bbox']
         joint_img = data['joint_img']
-        data_source = data['data_source']
         #print('ori: ', joint_img)
         #print('done-----------')
         joint_vis = data['joint_vis']
@@ -1954,138 +2177,54 @@ class JointDataset(Dataset):
         if self.multiple_db:
             joint_img = transform_joint_to_other_db(joint_img, joints_name, ref_joints_name)        
             joint_vis = transform_joint_to_other_db(joint_vis, joints_name, ref_joints_name)        
-       
-        gt_3dske = np.zeros((depth_dim * 3, output_shape, output_shape),dtype=np.float32)
-        is_vis_3d_ske = False
-        gt_3d_center = data['center_cam']
-        gt_2d_kpt = joint_img.copy() 
-        gt_2d_kpt[:,0], gt_2d_kpt[:,1], gt_2d_kpt[:,2] = warp_coord_to_original(gt_2d_kpt, bbox, gt_3d_center)
- 
-        if data_source == HUMAN36M:
-            f = data['f']
-            c = data['c']
-            is_vis_3d_ske = True
-            
-        elif data_source == MYMPII:
-            f = [300.0, -300.0]
-            c = [0.5, 0.5]
-            is_vis_3d_ske = False
-        else:
-            f = [300.0, -300.0]
-            c = [0.5, 0.5]
-            
-        gt_3d_kpt = np.zeros((joint_img.shape[0],3))
-        #print(gt_2d_kpt)
-        gt_3d_kpt[:,0], gt_3d_kpt[:,1], gt_3d_kpt[:,2] = pixel2cam(gt_2d_kpt, f, c)
-        #print(gt_3d_kpt)
-
-        #print(data_source)
-        #print("----------------")
-        is_vis_3d_ske = False
-        if is_vis_3d_ske:
-            # 7. Generate ground truth 3d ske
-            map_size_ = output_shape
-            depth_dims_ = depth_dim
-            root_x = gt_3d_kpt[0,0]
-            root_y = gt_3d_kpt[0,1]
-            root_z = gt_3d_kpt[0,2]
-            
-            if data_source == HUMAN36M:
-                x_lb_ = -921.5909885
-                x_ub_ = 921.5909885
-                y_lb_ = -921.5909885
-                y_ub_ = 921.5909885
-                z_lb_ = -950.637313 
-                z_ub_ = 892.544664
-                endpoint_dist_threshold_ = 60.0
-                line_width_ = 30.0
-            ske3d_toshow = []
-            for l in range(len(skeleton)):
-                #print('Generating ', l)
-                i1 = skeleton[l][0]
-                i2 = skeleton[l][1]
-                if joint_vis[i1] == 0 or joint_vis[i2] == 0:
-                    continue
-                
-                x1 = gt_3d_kpt[i1, 0] - root_x
-                x2 = gt_3d_kpt[i2, 0] - root_x
-                y1 = gt_3d_kpt[i1, 1] - root_y
-                y2 = gt_3d_kpt[i2, 1] - root_y
-                z1 = gt_3d_kpt[i1, 2] - root_z
-                z2 = gt_3d_kpt[i2, 2] - root_z
-                cnt_cur_bone = 0
-                for k in range(0, depth_dims_):
-                    for row in range(0, map_size_):
-                        for col in range(0, map_size_):
-                            
-                            x0 = float(col) / float(map_size_) * (x_ub_ - x_lb_) + x_lb_
-                            y0 = float(row) / float(map_size_) * (y_ub_ - y_lb_) + y_lb_
-                            z0 = float(k) / float(depth_dims_) * (z_ub_ - z_lb_) + z_lb_
-                            fz = (x1 - x0) * (x2 - x1) + (y1 - y0) * (y2 - y1) + (z1 - z0) * (z2 - z1)
-                            fm = math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2) + math.pow(z2 - z1, 2) + 1e-8
-                            t = -fz / fm
-                            d = math.sqrt(math.pow((x1 - x0) + (x2 - x1) * t, 2) + math.pow((y1 - y0) + (y2 - y1) * t, 2) + math.pow((z1 - z0) + (z2 - z1) * t, 2))
-
-                            #//========distance from point X0 to line X1->X2 X0 = [x0, y0, z0]^T, X1 = [x1, y1, z1]^T, X2 = [x2, y2, z2]^T
-                            if (x0 - x1 > 1e-6) or (math.fabs(x0 - x1) < 1e-6):
-                                flag_x_a = True
-                            else:
-                                flag_x_a = False
-                            if (x2 - x0 > 1e-6) or (math.fabs(x2 - x0) < 1e-6):
-                                flag_x_b = True
-                            else:
-                                flag_x_b = False
-                            equal_x = False
-                            if (math.fabs(x0 - x1) < endpoint_dist_threshold_):
-                                equal_x = True
-                            if (math.fabs(x0 - x2) < endpoint_dist_threshold_):
-                                equal_x = True
-
-                            if (y0 - y1 > 1e-6) or (math.fabs(y0 - y1) < 1e-6):
-                                flag_y_a = True
-                            else:
-                                flag_y_a = False
-                            if (y2 - y0 > 1e-6) or (math.fabs(y2 - y0) < 1e-6):
-                                flag_y_b = True
-                            else:
-                                flag_y_b = False
-                            equal_y = False
-                            if (math.fabs(y0 - y1) < endpoint_dist_threshold_):
-                                equal_y = True
-                            if (math.fabs(y0 - y2) < endpoint_dist_threshold_):
-                                equal_y = True
-
-
-                            if (z0 - z1 > 1e-6) or (math.fabs(z0 - z1) < 1e-6):
-                                flag_z_a = True
-                            else:
-                                flag_z_a = False
-                            if (z2 - z0 > 1e-6) or (math.fabs(z2 - z0) < 1e-6):
-                                flag_z_b = True
-                            else:
-                                flag_z_b = False
-                            equal_z = False
-                            if (math.fabs(z0 - z1) < endpoint_dist_threshold_):
-                                equal_z = True
-                            if (math.fabs(z0 - z2) < endpoint_dist_threshold_):
-                                equal_z = True
-
-                            if (((flag_x_a == flag_x_b) or equal_x) and ((flag_y_a == flag_y_b) or equal_y) and ((flag_z_a == flag_z_b) or equal_z)):
-                                if (line_width_ - d > 1e-6):
-                                    cnt_cur_bone += 1
-                                    #print('z: ',k,' x: ',col,' y: ',row)
-                                    ske3d_toshow.append([k, row, col])
-                                    #vis_3dske(ske3d_toshow, self.skeleton)  
-
-                                    for c in range(3):
-                                        gt_3dske[c * depth_dims_ + k][row][col] = self.ske_colors[l][c] / 255.0      
-            
-            #Visualize the 3d skeleton map
-            #print(ske3d_toshow)
-            #vis_3dske(ske3d_toshow, self.skeleton)  
-
-                            
         
+        # 7. Generate mapping cylinder in 3D
+        gt_mapping_cylinder[0:depth_dim][0:output_shape][0:output_shape] = 0
+        for j in range(len(self.skeleton)):
+            if self.multiple_db:
+                u = self.skeleton[0][j][0]
+                v = self.skeleton[0][j][1]
+            else:
+                u = self.skeleton[j][0]
+                v = self.skeleton[j][1]
+            u_x = joint_img[u][0]
+            u_y = joint_img[u][1]
+            u_z = joint_img[u][2]
+            v_x = joint_img[v][0]
+            v_y = joint_img[v][1]
+            v_z = joint_img[v][2]
+
+
+            min_z = min(u_z, v_z)
+            min_x = min(u_x, v_x)
+            min_y = min(u_y, v_y)
+
+            max_z = max(u_z, v_z)
+            max_x = max(u_x, v_x)
+            max_y = max(u_y, v_y)
+            flag = False
+            if min_z >=0 and max_z < depth_dim:
+                if min_x >= 0 and max_x < output_shape:
+                    if min_y >= 0 and max_y < output_shape:
+                        flag = True
+            if flag == True:
+                #print(min_x, ' ',max_x,' ',min_y,' ',max_y,' ',min_z,' ',max_z)
+                dist_thresh = 0.5
+                for z in range(int(min_z), int(max_z)):
+                    for y in range(int(min_y), int(max_y)):
+                        for x in range(int(min_x), int(max_x)):
+                            #print("XYZ", x,' ',y,' ',z)
+                            b = np.array([v_x, v_y, v_z])
+                            a = np.array([u_x, u_y, u_z])
+                            p = np.array([x, y, z])
+                            dist = lineseg_dist(p, a, b)
+                            if dist < dist_thresh:
+                                #print('0->z=',z,' y=', y,' x=',x,' assigned to 1')
+                                #print('depth_dim ', depth_dim)
+                                for t in range(0, min(depth_dim, z)):
+                                    gt_mapping_cylinder[t][y][x] = 1.0
+                                
+
         # 7. Generate ground truth skeleton
         gt_ske = np.zeros((output_shape, output_shape, 3),dtype=np.uint8)
         
@@ -2120,12 +2259,159 @@ class JointDataset(Dataset):
             joint_img = joint_img.astype(np.float32)
             joint_vis = (joint_vis > 0).astype(np.float32)
             joints_have_depth = np.array([joints_have_depth]).astype(np.float32)
-            #data_source = data_source.astype(np.float32)
-            return style_patch, content_patch, joint_img, joint_vis, joints_have_depth, gt_ske_out, data_source, gt_3dske
+
+            return style_patch, content_patch, joint_img, joint_vis, joints_have_depth, gt_ske_out, gt_mapping_cylinder
         else:
             return style_patch, content_patch
 
         
+class JointDataset(Dataset):
+    def __init__(self, db, is_train):
+        
+        if isinstance(db, list):
+            self.multiple_db = True
+            self.db = [d.load_data() for d in db]
+            self.joints_name = [d.joints_name for d in db]
+            self.joint_num = [d.joint_num for d in db]
+            self.skeleton = [d.skeleton for d in db]
+            self.lr_skeleton = [d.lr_skeleton for d in db]
+            self.flip_pairs = [d.flip_pairs for d in db]
+            self.joints_have_depth = [d.joints_have_depth for d in db]
+        else:
+            self.multiple_db = False
+            self.db = db.load_data()
+            self.joint_num = db.joint_num
+            self.skeleton = db.skeleton
+            self.lr_skeleton = db.lr_skeleton
+            self.flip_pairs = db.flip_pairs
+            self.joints_have_depth = db.joints_have_depth
+        #print(self.skeleton)        
+        #compute JointDatasetLength
+        if self.multiple_db:
+            self.dataset_len = max([len(db) for db in self.db]) * len(self.db)
+        else:
+            self.dataset_len = len(self.db)
+
+        self.is_train = is_train
+        self.style_path_prefix = "allstyles/"
+        self.style_path_suffix = ".png"
+        self.content_path_prefix = "testset/"
+        self.content_path_suffix = '.png'
+        self.transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=pixel_mean, std=pixel_std)])
+        self.do_aug = False
+        
+        self.id_styles = []
+        self.lbd_styles = 0
+        self.ubd_styles = 51
+        for i in range(self.dataset_len):
+            self.id_styles.append(random.randint(self.lbd_styles, self.ubd_styles))
+        
+        self.ske_colors = (( 85, 152, 188 ),                 
+                           ( 199, 153, 96 ),                
+                           ( 191, 141, 113 ),               
+                           ( 119, 165, 232 ),               
+                           ( 140, 139, 66 ),                 
+                           ( 84, 83, 232 ),                  
+                           ( 234, 218, 188 ),                
+                           ( 178, 179, 252 ),               
+                           ( 234, 235, 84 ),                 
+                           ( 84, 100, 130 ),                
+                           ( 230, 30, 210 ),                
+                           ( 60, 200, 155),                  
+                           ( 180, 20, 60 ),                 
+                           ( 128, 128, 128 ),   
+                           ( 238,190, 77),
+                           ( 40, 169, 35),
+                           ( 77, 55, 176))
+    
+    def __len__(self):
+        return self.dataset_len
+
+
+    def __getitem__(self, idx):
+        # 0. First get the data from the database (merging 2 datasets)
+        if self.multiple_db:
+            db_idx = idx // max([len(db) for db in self.db])
+
+            joint_num = self.joint_num[db_idx]
+            skeleton = self.skeleton[db_idx]
+            lr_skeleton = self.lr_skeleton[0]
+            flip_pairs = self.flip_pairs[db_idx]
+            joints_have_depth = self.joints_have_depth[db_idx]
+
+            ref_joints_name = self.joints_name[0]
+            joints_name = self.joints_name[db_idx]
+            
+            item_idx = idx % max([len(db) for db in self.db]) % len(self.db[db_idx])
+            data = copy.deepcopy(self.db[db_idx][item_idx])
+            
+        else:
+            joint_num = self.joint_num
+            skeleton = self.skeleton
+            lr_skeleton = self.lr_skeleton
+            flip_pairs = self.flip_pairs
+            joints_have_depth = self.joints_have_depth
+
+            data = copy.deepcopy(self.db[idx])
+
+
+        #1. load image
+        # Get style image
+        style_id = self.id_styles[idx]
+        style_path_prefix = self.style_path_prefix 
+        style_path = style_path_prefix + str(style_id) + self.style_path_suffix
+        style_img = cv2.imread(style_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
+        if not isinstance(style_img, np.ndarray):
+            raise IOError("Fail to read %s" % style_path)
+        
+        #style_img = cv2.resize(style_img, (img_size, img_size))
+        style_height, style_width, style_channels = style_img.shape
+
+        style_img = style_img / 255.0
+        
+        # Get content image 
+        content_path_prefix = self.content_path_prefix 
+        content_path = content_path_prefix + str(idx) + self.content_path_suffix
+        content_img = cv2.imread(content_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
+        if not isinstance(content_img, np.ndarray):
+            raise IOError("Fail to read %s" % content_path)
+        
+        img_height, img_width, img_channels = content_img.shape
+
+        content_img = content_img / 255.0
+        # Get content image 
+        
+
+
+        
+        #2. get aug params
+        if self.do_aug:
+            scale, rot, do_flip, color_scale = get_aug_config()
+        else:
+            scale, rot, do_flip, color_scale = 1.0, 0, False, [1.0, 1.0, 1.0]
+
+        # Read bbx (especially for mpii) to crop the patches
+        bbox = [0, 0, img_width, img_height]
+        
+        style_patch, trans = generate_patch_image(style_img, [0, 0, style_width, style_height], do_flip, scale, rot)
+        for j in range(img_channels):
+            style_patch[:, :, j] = np.clip(style_patch[:, :, j] * color_scale[j], 0, 255)
+        # Remember to update trans
+        # 3. crop patch from img and perform data augmentation (flip, scale, rot, color scale)
+        content_patch, trans = generate_patch_image(content_img, bbox, do_flip, scale, rot)
+        for i in range(img_channels):
+            content_patch[:, :, i] = np.clip(content_patch[:, :, i] * color_scale[i], 0, 255)
+
+
+        # 4. generate patch joint ground truth
+        # flip joints and apply Affine Transform on joints
+        
+        # 8. Image transformation preprocessing
+        content_patch = self.transforms(content_patch)
+        style_patch = self.transforms(style_patch)
+        
+        return style_patch, content_patch
+
 
 class MyDataset(Dataset):
 
@@ -2317,14 +2603,11 @@ class MyDataset(Dataset):
 
 # 2. Build dataset
 test_list = []
-#test_list.append(Human36M("test", spl_ratio = 5, subject_list = [9]))
-test_list = Human36M("test", spl_ratio = 64)#, subject_list = [9], action_idx = (2, 3, 4), subaction_idx = (1,), camera_idx = (1,))
-
-#test_list.append(MPII("train"))
+test_list.append(Human36M("train", spl_ratio = 5, subject_list = [1, 5], action_idx = (2, 3), subaction_idx = (1, 2), camera_idx = (1, 2, 3, 4)))
+test_list.append(MPII("train"))
 #train_list = MPII("train")#Human36M("train", spl_ratio = 5, subject_list = [1, 5, 6, 7], action_idx = (2, 3), subaction_idx = (1, 2), camera_idx = (1, 2, 3, 4))
  #MPII("train")
-test_dataset = JointDataset(test_list, False)
-print('len : ' , test_dataset.dataset_len)
+test_dataset = JointDataset(test_list, True)
 
 test_loader = torch.utils.data.DataLoader(
             test_dataset, batch_size=batch_size, shuffle=False)
@@ -2942,9 +3225,10 @@ def wide_resnet101_2(pretrained=False, progress=True, **kwargs):
                    pretrained, progress, **kwargs)
 
 
+
 class ResNetBackbone(nn.Module):
 
-    def __init__(self, resnet_type, is_pose_net=True):
+    def __init__(self, resnet_type, is_pose_net=True, num_channel_first_layer = 3):
     
         resnet_spec = {18: (BasicBlock, [2, 2, 2, 2], [64, 64, 128, 256, 512], 'resnet18'),
                34: (BasicBlock, [3, 4, 6, 3], [64, 64, 128, 256, 512], 'resnet34'),
@@ -2959,10 +3243,10 @@ class ResNetBackbone(nn.Module):
         self.is_pose_net = is_pose_net
         super(ResNetBackbone, self).__init__()
         if self.is_pose_net:
-            self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
+            self.conv1 = nn.Conv2d(num_channel_first_layer, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
         else:
-            self.conv1 = nn.Conv2d(6, 64, kernel_size=7, stride=2, padding=3,
+            self.conv1 = nn.Conv2d(num_channel_first_layer, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
@@ -3183,7 +3467,7 @@ class ResNetBackbone(nn.Module):
             #256x32x32->3x32x32
             sign_res3c_deconv = self.layer2_conv3(sign_res3c_deconv)
             sign_res3c_deconv = self.layer2_bn3(sign_res3c_deconv)
-            sign_res3c_deconv = self.relu(sign_res3c_deconv)
+            #sign_res3c_deconv = self.relu(sign_res3c_deconv)
 
 
         x = self.layer3(x)
@@ -3224,6 +3508,9 @@ class ResNetBackbone(nn.Module):
         for name, m in self.deconv_layers.named_modules():
             if isinstance(m, nn.ConvTranspose2d):
                 nn.init.normal_(m.weight, std=0.01)
+
+
+
 
 # Conv Layer
 class ConvLayer(nn.Module):
@@ -3339,6 +3626,41 @@ class ImageTransformNet(nn.Module):
         a = 1
 
 
+
+class HeadNet_reg(nn.Module):
+    def __init__(self):
+        super(HeadNet_reg, self).__init__()
+        self.fc1 = nn.Linear(2048, 256)
+        self.batch_norm1 = nn.BatchNorm1d(256)
+        
+        self.fc_neg_thorax = nn.Linear(256, 3)
+        self.fc_norm_bone = nn.Linear(256, 45)
+        
+        self.avgpool = nn.AvgPool2d(7)
+        self.relu = nn.ReLU(inplace=True)
+        
+    def forward(self, x):
+        x = self.avgpool(x)
+        x = x.view(-1, 2048)
+        x = self.fc1(x)
+        x = self.batch_norm1(x)
+        x = self.relu(x)
+        
+        neg_thorax = self.fc_neg_thorax(x)
+        norm_bone = self.fc_norm_bone(x)
+
+        
+        
+        return neg_thorax, norm_bone
+    def init_weights(self):
+        for m in self.modules():
+           if isinstance(m, nn.Linear):
+              #nn.init.kaiming_normal(m.weight)
+              nn.init.normal_(m.weight, std=0.05)
+            
+
+
+
 class HeadNet(nn.Module):
 
     def __init__(self, joint_num=16):
@@ -3435,6 +3757,20 @@ class ResPoseNet(nn.Module):
 
 # string 'resnet18' 'resnet34' 'resnet50' 'resnet101' 'resnet152'
 
+class ResPoseNet2DSke(nn.Module):
+    def __init__(self, backbone, head):
+        super(ResPoseNet2DSke, self).__init__()
+        self.backbone = backbone
+        self.head = head
+
+    def forward(self, x):
+        
+        x, sign_res3c, sign_res4f, sign_res5c, sign_res3c_deconv = self.backbone(x)
+        neg_thorax, norm_bone = self.head(x)
+        return neg_thorax, norm_bone
+# string 'resnet18' 'resnet34' 'resnet50' 'resnet101' 'resnet152'
+
+
 
 #vgg definition that conveniently let's you grab the outputs from any layer
 class VGG(nn.Module):
@@ -3519,11 +3855,35 @@ def get_pose_net(is_train):
 
     return model
 
+
+#2d ske -> pose
+
+def get_pose_net_2dske(is_train):
+    backbone = ResNetBackbone(50, is_pose_net = True, num_channel_first_layer = 41)
+    head_net = HeadNet_reg()#(ge_res50 = True)
+    if is_train:
+        backbone.init_weights()
+        head_net.init_weights()
+        
+    model = ResPoseNet2DSke(backbone, head_net)
+
+    return model
+
+
+
 model_deconv = get_deconv_net(True)
 model_deconv = DataParallelModel(model_deconv).cuda()
 
 model = get_pose_net(True)        
 model = DataParallelModel(model).cuda()
+
+
+
+#2d ske -> pose
+model_2dske = get_pose_net_2dske(True)
+model_2dske = DataParallelModel(model_2dske).cuda()
+
+
 model_dir = os.getcwd() + '/Models/'
 #get network
 vgg = VGG()
@@ -3565,6 +3925,9 @@ def load_model():
     ckpt_deconv = torch.load('resnet50/model256_mpii_ist_deconv_'  + model_str + '.pth')
     
     model_deconv.load_state_dict(ckpt_deconv)
+
+    ckpt_2dske = torch.load('resnet50/model256_mpii_ist_2dske_to_pose_' + model_str + '.pth')
+    model_2dske.load_state_dict(ckpt_2dske)
 
 load_model()
 
@@ -3656,8 +4019,6 @@ def test():
     cnt = 0
     scheduler.step()
     #for iter_id in range(per_epoch_iters):
-    preds = []
-
     with torch.no_grad():
 
         for iter_id in range(1):
@@ -3684,53 +4045,394 @@ def test():
                 #style_layers = ['r11','r21','r33','r42', 'r51'] 
                 #content_layers = ['r52']
                 
+                #style_layers = ['r11','r21', 'r31','r41', 'r51'] 
+                style_ent_layers = ['r11','r12', 'r21'] 
+                content_layers = ['r42']#'r52', 'r53', 'r54']
+                content_ent_layers = ['r52', 'r53', 'r54']
+                
+                style_layers = ['r11','r21','r31','r41', 'r51'] 
+                #content_layers = ['r42']
+                loss_layers = style_layers + content_layers
+                loss_fns = [GramMSELoss()] * len(style_layers) + [nn.MSELoss()] * len(content_layers)
+                if torch.cuda.is_available():
+                    loss_fns = [loss_fn.cuda() for loss_fn in loss_fns]
+        
+                #these are good weights settings:
+                style_weights = [1e3/n**2 for n in [64,128,256,512,512]] #[1e0, 0.002, 5e-4, 1e-5, 0.01]
+                content_weights = [1, 1, 1, 1, 1]# [0.01, 0.06, 0.26, 1]
+                weights = style_weights + content_weights
+                #compute optimization targets
+                
+                style_targets = [GramMatrix()(A).detach() for A in vgg(style, style_layers)]
+                content_targets = [A.detach() for A in vgg(content, content_layers)]
+                targets = style_targets + content_targets
+                #print(targets)
+
+                
+                # USE Deconv opt -> loss network -> 
+                # style & content from deconv opt
+                out = vgg(opt, loss_layers)
+                style_targets_out = [A.detach() for A in vgg(style, style_ent_layers)]
+                content_targets_out = [A.detach() for A in vgg(content, content_ent_layers)]
+                opt_style_out = [A.detach() for A in vgg(opt, style_ent_layers)]
+                opt_content_out = [A.detach() for A in vgg(opt, content_ent_layers)]
+                
+                # KL JS losses
+                style_ent_loss = 0
+                content_ent_loss = 0
+                # ==== STYLE
+                for i in range(len(style_targets_out)):
+                    b, c, h, w = style_targets_out[i].shape
+                    #GT style VGG features (style)
+                    style_targets_out[i] = style_targets_out[i].reshape(b, c, h * w)
+                    style_targets_out[i] = nn.Softmax(dim=2)(style_targets_out[i])
+                    style_targets_out[i] = style_targets_out[i].reshape(b, c, h, w)
+
+                    #opt image VGG features(style)
+                    opt_style_out[i] = opt_style_out[i].reshape(b, c, h * w)
+                    opt_style_out[i] = nn.Softmax(dim=2)(opt_style_out[i])
+                    opt_style_out[i] = opt_style_out[i].reshape(b, c, h, w)
+                    cur_loss = js_div_loss_2d(style_targets_out[i], opt_style_out[i])
+                    print(i, 'style JS', cur_loss)
+                    style_ent_loss += cur_loss
+
+                # ==== CONTENT
+                for i in range(len(content_targets_out)):
+                    b, c, h, w = content_targets_out[i].shape
+                    #GT content VGG features (content)
+                    content_targets_out[i] = content_targets_out[i].reshape(b, c, h * w)
+                    content_targets_out[i] = nn.Softmax(dim=2)(content_targets_out[i])
+                    content_targets_out[i] = content_targets_out[i].reshape(b, c, h, w)
+
+                    #opt image VGG features(content)
+                    opt_content_out[i] = opt_content_out[i].reshape(b, c, h * w)
+                    opt_content_out[i] = nn.Softmax(dim=2)(opt_content_out[i])
+                    opt_content_out[i] = opt_content_out[i].reshape(b, c, h, w)
+                    cur_loss = js_div_loss_2d(content_targets_out[i], opt_content_out[i])
+                    print(i, 'content JS', cur_loss)
+                    content_ent_loss += cur_loss
+
+
+                layer_losses = [weights[a] * loss_fns[a](A, targets[a]) for a,A in enumerate(out)]
+                #print(layer_losses)
+                ll = layer_losses
+                ref_loss = layer_losses[4].item()
+                for j in range(0, len(layer_losses)):
+                    cur_loss = layer_losses[j].item()
+                    #print(cur_loss)
+                    if cur_loss > 0.00000001:
+                        w_ = ref_loss / (cur_loss)
+                    else:
+                        w_ = 1.0
+                    layer_losses[j] = layer_losses[j] * w_
+                            
+                #nst_loss.backward()
+
+                # calculate total variation regularization (anisotropic version)
+                # https://www.wikiwand.com/en/Total_variation_denoising
+                diff_i = torch.sum(torch.abs(opt[:, :, :, 1:] - opt[:, :, :, :-1]))
+                diff_j = torch.sum(torch.abs(opt[:, :, 1:, :] - opt[:, :, :-1, :]))
+                tv_loss = TV_WEIGHT*(diff_i + diff_j)
+                print('layer losses')
+                print(layer_losses)
+
+                nst_loss = sum(layer_losses) + tv_loss
+
                 
                 optimizer.zero_grad()
                 #opt = opt.transpose(-1, 2, 3, 1)
                 heatmap_out, res3c, res4f, res5c, res3c_deconv, pred_3dske = model(opt)
                 
+                # DEFINE skeleton used in the merged dataset
+                if test_dataset.multiple_db == True:
+                    myske = test_dataset.skeleton[0]
+                else:
+                    myske = test_dataset.skeleton
+
+
+                
+
+                # Generate bone img ground truth
+                pixel_thresh = 0.3
+                eps = 0.001
+                sigma_0 = 0.025
+                sigma_1 = 2.35
+                max_a = 10.0 / float(img_size)
+
+                render_size = img_size
+                bone_img_arr = np.zeros((batch_size, img_size, img_size, 3), dtype=np.float32)
+                bone_img_arr_per_bone = np.zeros((batch_size, img_size, img_size, len(myske)), dtype=np.float32)
+                
+                 
+
+                bone_img_arr_oval = np.zeros((batch_size, img_size, img_size, 3), dtype=np.float32)
+                bone_img_arr_per_bone_oval = np.zeros((batch_size, img_size, img_size, len(myske)), dtype=np.float32)
+                
+                use_bone_img = True
+                use_oval = True
+                if use_bone_img:
+                    for i in range(batch_size):
+                        coord_out = soft_argmax(heatmap_out[i], global_joint_num).data.cpu().numpy()[0]
+                        coord_out = coord_out * 4.0
+                      
+                        bone_img = np.zeros((img_size, img_size, 3), dtype=np.float32)
+                        bone_img_oval = np.zeros((img_size, img_size, 3), dtype=np.float32)
+                        for bone in range(len(myske)):
+                            i1 = myske[bone][0]
+                            i2 = myske[bone][1]
+                            b = test_dataset.ske_colors[bone][0]
+                            g = test_dataset.ske_colors[bone][1]
+                            r = test_dataset.ske_colors[bone][2]
+                            x1 = coord_out[i1][0] / float(img_size)
+                            y1 = coord_out[i1][1] / float(img_size)
+                            x2 = coord_out[i2][0] / float(img_size)
+                            y2 = coord_out[i2][1] / float(img_size)
+                            minx = min(x1, x2) 
+                            maxx = max(x1, x2) 
+                            miny = min(y1, y2) 
+                            maxy = max(y1, y2) 
+
+                            minxx = min(x1, x2) - 0.02
+                            maxxx = max(x1, x2) + 0.02
+                            minyy = min(y1, y2) - 0.02
+                            maxyy = max(y1, y2) + 0.02
+
+                            #print(minx,' ',maxx,' ',miny,' ',maxy)
+                            blank_image = np.zeros((img_size,img_size,1), np.uint8)
+                            blank_image_oval = np.zeros((img_size,img_size,1), np.uint8)
+                            
+                            max_b = 0.5 * math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+                            
+                            if use_oval:
+                                for col in range(0, render_size):
+                                        x = (col + 0.5) / float(render_size);
+                                        if (math.fabs(x - minxx) < eps or math.fabs(x - maxxx) < eps or (x - minxx > eps and maxxx - x > eps)):
+                                            for row in range(0, render_size):
+                                                y = (row + 0.5) / float(render_size)
+                                                if (math.fabs(y - minyy) < eps or math.fabs(y - maxyy) < eps or (y - minyy > eps and maxyy - y > eps)):
+                                                
+                                #for row in range(0, render_size):
+                                #    for col in range(0, render_size):
+                                #        x = (col + 0.5) / float(render_size)
+                                #        y = (row + 0.5) / float(render_size)
+                                        
+                                                    dist_2_line = math.fabs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) / math.sqrt(math.pow(y2 - y1, 2) + math.pow(x2 - x1, 2) + 0.0000000000000000001)
+                                                    dist_minor_axis = math.pow(x - (x1 + x2) / 2.0, 2) + math.pow(y - (y1 + y2) / 2.0, 2) - math.pow(dist_2_line, 2)
+                                                    dist_minor_axis = max(0.0, dist_minor_axis)
+                                                    dist_minor_axis = math.sqrt(dist_minor_axis)
+
+                                                    dist = math.pow(dist_2_line, 2) / math.pow(max_a, 2) + math.pow(dist_minor_axis, 2) / math.pow(max_b, 2)
+                                                    if 1.0 - dist > 1e-6:
+                                                        blank_image_oval[row][col][0] = 1.0 * 255
+                                                        bone_img_oval[row][col][0] += blank_image_oval[row][col][0] / 255.0 * b / 255.0
+                                                        bone_img_oval[row][col][1] += blank_image_oval[row][col][0] / 255.0 * g / 255.0
+                                                        bone_img_oval[row][col][2] += blank_image_oval[row][col][0] / 255.0 * r / 255.0
+                                                        bone_img_arr_oval[i][row][col][0] += bone_img_oval[row][col][0]          
+                                                        bone_img_arr_oval[i][row][col][1] += bone_img_oval[row][col][1]          
+                                                        bone_img_arr_oval[i][row][col][2] += bone_img_oval[row][col][2] 
+                                                    
+                                                    bone_img_arr_per_bone_oval[i][row][col][bone] = (blank_image_oval[row][col][0] + blank_image_oval[row][col][0] + blank_image_oval[row][col][0]) / 3.0 / 255.0 
+                            
+                            if (math.fabs(x1 - x2) < eps):
+                                for col in range(0, render_size):
+                                    x = (col + 0.5) / float(render_size)
+                                    for row in range(0, render_size):
+                                        y = (row + 0.5) / float(render_size)
+                                        if (math.fabs(y - miny) < eps or math.fabs(y - maxy) < eps or (y - miny > eps and maxy - y > eps)):
+                                            dsquare1 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(x - x1, 2)
+                                            dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((y - y1) / (y2 - y1), 2)
+                                            blank_image[row][col][0] = math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                            bone_img[row][col][0] += blank_image[row][col][0] / 255.0 * b / 255.0
+                                            bone_img[row][col][1] += blank_image[row][col][0] / 255.0 * g / 255.0
+                                            bone_img[row][col][2] += blank_image[row][col][0] / 255.0 * r / 255.0
+                                            bone_img_arr[i][row][col][0] += bone_img[row][col][0]          
+                                            bone_img_arr[i][row][col][1] += bone_img[row][col][1]          
+                                            bone_img_arr[i][row][col][2] += bone_img[row][col][2] 
+                                        bone_img_arr_per_bone[i][row][col][bone] = (blank_image[row][col][0] + blank_image[row][col][0] + blank_image[row][col][0]) / 3.0 / 255.0       
+                                      
+                            elif (math.fabs(y1 - y2) < eps):
+                                for row in range(0, render_size):
+                                    y = (row + 0.5) / float(render_size)
+                                    for col in range(0, render_size):
+                                        x = (col + 0.5) / float(render_size)
+                                        if (math.fabs(x - minx) < eps or math.fabs(x - maxx) < eps or (x - minx > eps and maxx - x > eps)):
+                                            dsquare1 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(y - y1, 2)
+                                            dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((x - x1) / (x2 - x1), 2)
+                                            blank_image[row][col][0] = math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                            bone_img[row][col][0] += blank_image[row][col][0] / 255.0 * b / 255.0
+                                            bone_img[row][col][1] += blank_image[row][col][0] / 255.0 * g / 255.0
+                                            bone_img[row][col][2] += blank_image[row][col][0] / 255.0 * r / 255.0
+                                            bone_img_arr[i][row][col][0] += bone_img[row][col][0]          
+                                            bone_img_arr[i][row][col][1] += bone_img[row][col][1]          
+                                            bone_img_arr[i][row][col][2] += bone_img[row][col][2] 
+                                        bone_img_arr_per_bone[i][row][col][bone] = (blank_image[row][col][0] + blank_image[row][col][0] + blank_image[row][col][0]) / 3.0 / 255.0       
+                            else:
+                                A = (y2 - y1) / (x2 - x1)
+                                B = -1.0
+                                C = y1 - A * x1
+                                for col in range(0, render_size):
+                                    x = (col + 0.5) / float(render_size);
+                                    if (math.fabs(x - minx) < eps or math.fabs(x - maxx) < eps or (x - minx > eps and maxx - x > eps)):
+                                        for row in range(0, render_size):
+                                            y = (row + 0.5) / float(render_size)
+                                            if (math.fabs(y - miny) < eps or math.fabs(y - maxy) < eps or (y - miny > eps and maxy - y > eps)):
+                                                dsquare0 = -1.0 / (2.0 * sigma_0 * sigma_0) * math.pow(A * x + B * y + C, 2) / (math.pow(A, 2) + math.pow(B, 2))
+                                                dsquare1 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((x - x1) / (x2 - x1), 2)
+                                                dsquare2 = -1.0 / (2.0 * sigma_1 * sigma_1) * math.pow((y - y1) / (y2 - y1), 2)
+                                                blank_image[row][col][0] = math.exp(dsquare0) * math.exp(dsquare1) * math.exp(dsquare2) * 255
+                                                bone_img[row][col][0] += blank_image[row][col][0] / 255.0 * b / 255.0
+                                                bone_img[row][col][1] += blank_image[row][col][0] / 255.0 * g / 255.0
+                                                bone_img[row][col][2] += blank_image[row][col][0] / 255.0 * r / 255.0
+                            
+                                                bone_img_arr[i][row][col][0] += bone_img[row][col][0]          
+                                                bone_img_arr[i][row][col][1] += bone_img[row][col][1]          
+                                                bone_img_arr[i][row][col][2] += bone_img[row][col][2]        
+                                            
+                                            bone_img_arr_per_bone[i][row][col][bone] = (blank_image[row][col][0] + blank_image[row][col][0] + blank_image[row][col][0]) / 3.0 / 255.0 
+                        cv2.imshow("blank", bone_img_arr[i])
+                        cv2.waitKey(1)
+                        if use_oval:
+                            cv2.imshow("blank_oval", bone_img_arr_oval[i])
+                            cv2.waitKey(1)
+                            
+                    # Bone img concatenate style -> deconv a stylized image
+                    # [0, 1] -> std mean normalize it
+                    pre_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=pixel_mean, std=pixel_std)])
+                    bone_img_arr = bone_img_arr.transpose(0,3,1,2)
+                    if use_oval:
+                        bone_img_arr_oval = bone_img_arr_oval.transpose(0,3,1,2)
+                    
+
+                # the original gt ske (old-fashioned)
+                # 7. Generate ground truth skeleton
+                ske_img_arr = np.zeros((batch_size, 3, img_size, img_size), dtype=np.float32)
+                
+                for i in range(batch_size):
+                    #print(i)
+                    coord_out = soft_argmax(heatmap_out[i], global_joint_num).data.cpu().numpy()[0]
+                    coord_out = coord_out * 4.0
+                    pred_ske = np.zeros((img_size, img_size, 3),dtype=np.uint8)
+                
+                    for j in range(len(myske)):
+                        i1 = myske[j][0]
+                        i2 = myske[j][1]
+                        
+                        x1 = coord_out[i1][0]
+                        y1 = coord_out[i1][1]
+                        x2 = coord_out[i2][0]
+                        y2 = coord_out[i2][1]
+                        
+
+                    
+                        if 1:#[i][i1] == 1 and joint_vis[i][i2] == 1:
+                            #print(x1, y1, '    ===>    ', x2, y2)
+                            cv2.line(
+                            pred_ske, (x1.astype(np.int32), y1.astype(np.int32)), (x2.astype(np.int32), y2.astype(np.int32)),
+                            color=test_dataset.ske_colors[j], thickness=3, lineType=cv2.LINE_AA)
+                            #print('connecting ', j, 'done')
+                    pred_ske_ = cv2.resize(pred_ske, (512, 512))
+                        
+                    #cv2.imshow("pred_ske", pred_ske_)
+                    #cv2.waitKey(0)
+                    #cv2.imshow("pred_ske", pred_ske)
+                    #cv2.waitKey(0)
+                    #3xSxS
+                    pred_ske = pred_ske.transpose((2, 0, 1))
+                    pred_ske_out = np.zeros((3, img_size, img_size),dtype=np.float32)
+                    pred_ske_out[:, :, :] = pred_ske[:, :, :] / 255.0
+                    ske_img_arr[i] = pred_ske_out
+                    #print(i,' is done')
+
+
+
+                #transform
+                if use_bone_img:
+                    for i in range(batch_size):
+                        cur_img = bone_img_arr[i].transpose(1,2,0)
+                        bone_img_arr[i] = pre_transforms(cur_img)
+
+                        if use_oval:
+                            cur_img_oval = bone_img_arr_oval[i].transpose(1,2,0)
+                            bone_img_arr_oval[i] = pre_transforms(cur_img_oval)
+
+                    bone_img_arr = torch.from_numpy(bone_img_arr).cuda()
+                    if use_oval:
+                        bone_img_arr_oval = torch.from_numpy(bone_img_arr_oval).cuda()
+
+                    bone_img_arr_per_bone = bone_img_arr_per_bone.transpose(0,3,1,2)
+                    bone_img_arr_per_bone = torch.from_numpy(bone_img_arr_per_bone).cuda()
+
+                    if use_oval:
+                        bone_img_arr_per_bone_oval = bone_img_arr_per_bone_oval.transpose(0,3,1,2)
+                        bone_img_arr_per_bone_oval = torch.from_numpy(bone_img_arr_per_bone_oval).cuda()
+
+                #2d ske -> pose
+                #inp_2dske_to_pose = torch.cat((bone_img_arr, bone_img_arr_oval), dim = 1)#, bone_img_arr_per_bone, bone_img_arr_per_bone_oval), dim = 1)
+                t_ske_img_arr = ske_img_arr
+                
+                ske_img_arr = torch.from_numpy(ske_img_arr).cuda()
+                
+                
+                inp_2dske_to_pose = torch.cat((bone_img_arr_per_bone_oval, bone_img_arr_per_bone, bone_img_arr_oval, bone_img_arr, ske_img_arr),dim=1) #ske_img_arr # bone_img_arr_oval # ske_img_arr# bone_img_arr_oval
+                #heatmap_out_2dske_to_pose, res3c_, res4f_, res5c_, res3c_deconv_ = model_2dske(inp_2dske_to_pose)
+                neg_thorax_pred, norm_bone_pred = model_2dske(inp_2dske_to_pose)
+                # -> CPU
+                neg_thorax_pred = neg_thorax_pred.data.cpu().numpy()
+                norm_bone_pred = norm_bone_pred.data.cpu().numpy()
+                neg_thorax_pred = unnorm_neg_thorax(neg_thorax_pred)
+                norm_bone_pred = unnorm_bone(norm_bone_pred)
+                print('unnorm neg_thorax pred ', neg_thorax_pred)
+                print('unnorm_bone pred', norm_bone_pred)
+                # predicted joint reconstruction
+                joint_pred_reconstruct = bone2joint(norm_bone_pred)
+                pred_thorax = -neg_thorax_pred 
+                for j in range(18):
+                    if j != thorax:
+                        joint_pred_reconstruct[:,j * 3:(j + 1) * 3] += pred_thorax[:,:]
+                    else:
+                        joint_pred_reconstruct[:,j * 3:(j + 1) * 3] = pred_thorax[:,:]
+                print('pred reconst joint ', joint_pred_reconstruct)
+                pred_proj = pinhole_proj(joint_pred_reconstruct)
+                print('pred projection ', pred_proj)
+
+                
+
                 # Output nst result
                 #print(opt.shape)
                 for i in range(batch_size):
                     #print(opt.data[i])
                     #print('s')
-                    vis_2d = False
-                        
-                    if vis_2d:
-
-                        img = opt.data[i].cpu().numpy().transpose(1, 2, 0)
-                        #img = img / 255.0
-                        post_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=(0, 0, 0), std=pixel_std_neg), transforms.Normalize(mean=pixel_mean_neg, std=(1,1,1))])
-                        img = post_transforms(img)
-                        #img = img / 255.0
-                        #print(img)
-                        img[img > 1] = 1
-                        img[img < 0] = 0
-                        postpb = transforms.Compose([transforms.Lambda(lambda x: x[torch.LongTensor([2,1,0])]), transforms.ToPILImage()])
-                        img = postpb(img)
-                        
-                        #img = img.transpose(1, 2, 0)
-                        
-                        #print(img.shape)
-                        #print(img)
-                        #imshow(img)
-                        #show()
-                        open_cv_image = np.array(img) 
-                        # Convert RGB to BGR 
-                        open_cv_image = open_cv_image[:, :, ::-1].copy() 
+                    img = opt.data[i].cpu().numpy().transpose(1, 2, 0)
+                    #img = img / 255.0
+                    post_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=(0, 0, 0), std=pixel_std_neg), transforms.Normalize(mean=pixel_mean_neg, std=(1,1,1))])
+                    img = post_transforms(img)
+                    #img = img / 255.0
+                    #print(img)
+                    img[img > 1] = 1
+                    img[img < 0] = 0
+                    postpb = transforms.Compose([transforms.Lambda(lambda x: x[torch.LongTensor([2,1,0])]), transforms.ToPILImage()])
+                    img = postpb(img)
+                    
+                    #img = img.transpose(1, 2, 0)
+                    
+                    #print(img.shape)
+                    #print(img)
+                    #imshow(img)
+                    #show()
+                    open_cv_image = np.array(img) 
+                    # Convert RGB to BGR 
+                    open_cv_image = open_cv_image[:, :, ::-1].copy() 
+                    
                     if cnt % show_cnt == 0:
                         img_name = "D:/results/" + folder_prefix + "/" + str(tot) + ".png"
                         #cv2.imshow("opt", open_cv_image)
                         #cv2.waitKey(0)
-                        coord_out = soft_argmax(heatmap_out[i], global_joint_num).data.cpu().numpy()[0]
-                            
-                        cpu_coord_out = coord_out
-                        preds.append(cpu_coord_out)
-            
+                        vis_2d = True
+                        comp_w_integral = np.zeros((global_joint_num,3))
                         #overlay 2d prediction on the optimized neural style image
                         if vis_2d:
-                            
-                            coord_out = coord_out * 4.0
+                            coord_out = soft_argmax(heatmap_out[i], global_joint_num).data.cpu().numpy()[0]
+                            coord_out = coord_out * 4.0 #224
                             tmpimg = open_cv_image.copy().astype(np.uint8)
                             tmpkps = np.zeros((global_joint_num,3))
                             print(coord_out.shape)
@@ -3739,8 +4441,6 @@ def test():
                             print(tmpkps.shape)
                             
                             img_content_name = "D:/results/" + folder_prefix + "/" + str(tot) + "_content.png"
-                            #cv2.imshow("s", tmpimg)
-                            #cv2.waitKey(0)
                             cv2.imwrite(img_content_name, tmpimg)
 
                             if test_dataset.multiple_db == True:
@@ -3753,11 +4453,24 @@ def test():
                             pre_2d_file_name = "D:/results/" + folder_prefix + "/2d/" + str(tot) + ".txt"
                             f_pred_2d_kpt = open(pre_2d_file_name, 'w')
                             for j in range(global_joint_num):
+                                x_2d = tmpkps[j][0] / 224.0 #[0.0, 1.0] 
+                                y_2d = tmpkps[j][1] / 224.0
+                                z_comp = joint_pred_reconstruct[i][j * 3 + 2]
+                                x_comp_w_integral_2d = (x_2d - 0.5) * z_comp * 224.0 / 300.0
+                                y_comp_w_integral_2d = (y_2d - 0.5) * z_comp * 224.0 / -300.0
+                                comp_w_integral[j][0] = x_comp_w_integral_2d
+                                comp_w_integral[j][1] = y_comp_w_integral_2d
+                                comp_w_integral[j][2] = z_comp
+
                                 for k in range(2):
+
+
                                     f_pred_2d_kpt.write('%12.6f ' % tmpkps[j][k])
                                 f_pred_2d_kpt.write('\n')
                             f_pred_2d_kpt.close()
-                        vis_3d = False
+
+
+                        vis_3d = True
                         if vis_3d:
                                             
                             # back project to camera coordinate system
@@ -3798,10 +4511,20 @@ def test():
                             #pre_3d_kpt = np.zeros((global_joint_num,3))
                             #f = c = 1000
                             filename = 'D:/results/' + folder_prefix + '/3d/' + str(tot) + '.png'
+                            filename_comp = 'D:/results/' + folder_prefix + '/3d/' + str(tot) + '_comp.png'
+
                             #pre_3d_kpt[:,0], pre_3d_kpt[:,1], pre_3d_kpt[:,2] = pixel2cam(pre_2d_kpt, f, c)
                             gt_vis = np.ones((global_joint_num, 1))
                             #pre_3d_kpt[:,:] = coord_out[:,:] 
-                            vis_3d_skeleton(pre_3d_kpt, gt_vis, test_dataset.skeleton[0], filename)
+                            plt_show_wait = False
+                            vis_3d_skeleton(pre_3d_kpt, gt_vis, test_dataset.skeleton[0], filename, False)
+
+                            vis_comp_w_integral = True 
+                            if vis_comp_w_integral:
+                                plt_show_wait = True
+                                vis_3d_skeleton(comp_w_integral, gt_vis, test_dataset.skeleton[0], filename_comp, False)
+
+            
                         
                         vis_3d_ske = False
                         if vis_3d_ske:
@@ -3856,9 +4579,9 @@ def test():
                 #delta = 1.00
                 mu =   1# * nst_loss.item() / content_ent_loss.item()
                 theta = 1# * jnt_loss.item() / mapping_cylinder_layer_loss.item()
-                #print('nst : ', nst_loss)
-                #print('entropy (style): ', style_ent_loss)
-                #print('entropy (content): ', content_ent_loss)
+                print('nst : ', nst_loss)
+                print('entropy (style): ', style_ent_loss)
+                print('entropy (content): ', content_ent_loss)
                 
                 optimizer.step()
                 print('Optimization done')
@@ -3866,13 +4589,8 @@ def test():
                 ### Bug
                 ## Constantly save in case of data loss
                 #print('cnt - 1', cnt - 1)
-    #evaluate
-    #preds = np.concatenate(preds, axis=0)
-    print(preds)
-    #print(preds.shape)
-    test_list.evaluate(preds, 'D:/results/' + folder_prefix + '/h36m/')          
+                
 def main():
     test()
 if __name__ == "__main__":
     main()
-

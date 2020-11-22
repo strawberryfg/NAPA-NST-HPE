@@ -1,6 +1,6 @@
 #Test config
 lb = 0
-ub = 87
+ub = 230
 import numpy as np
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
@@ -11,12 +11,12 @@ from matplotlib.pyplot import *
 from mpl_toolkits.mplot3d import *
 from numpy import *
 from matplotlib import pyplot
-model_name_str = ['addmympii', 'addselfsup', 'integralblwonst' ,'m114_16', 'nomympii' ,'noselfsup', 'm116_1', 'm115_10', 'm116_4',  'm117_8', 'm118_15', 'm119_18', 'm120_24', 'm121_16', 'm122_3', 'm123_2', 'm124_2', 'm124_4']
+model_name_str = ['merge_muse_candy_feathers_composition_vii','m113_9', 'm124_4_new', 'm128_4', 'm130_4', 'm129_4', 'm132_13', 'merge_muse_candy', 'merge_muse_candy_feathers']# ['addmympii', 'addselfsup', 'integralblwonst' ,'m114_16', 'nomympii' ,'noselfsup', 'm116_1', 'm115_10', 'm116_4',  'm117_8', 'm118_15', 'm119_18', 'm120_24', 'm121_16', 'm122_3', 'm123_2', 'm124_2', 'm124_4']
 #model_name = 'm116_1'
 for model_name in model_name_str:
 	###Test config
 	joint_pred_file_prefix = "D:/results/" + model_name + "/2d/"
-	joint_gt_file_prefix = "C:/Users/Alienware 15 R3/Documents/nst/datasets/testset/annot/"
+	joint_gt_file_prefix = "testset/annot/"
 	save_prefix = "D:/results/" + model_name + "/pckh/"
 
 	###Basic settings
