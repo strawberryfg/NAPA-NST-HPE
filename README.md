@@ -53,7 +53,7 @@ ${DATA_ROOT}
 
 ## Stylized Results
 
-We show style transferred images for MPII below. For more output of style-specific model (the separate training one), go to [this link}(https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
+We show style transferred images on MPII below. For more output of style-specific models (recall the separate training), go to [this link}(https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
 
 
 ----
