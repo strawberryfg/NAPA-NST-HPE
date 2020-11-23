@@ -53,7 +53,7 @@ ${DATA_ROOT}
 
 ## Stylized Results
 
-We show style transferred images for human pose dataset MPII below.
+We show style transferred images for MPII below (*ours*: the end-to-end one). For output of style-specific model (the separate training one), go to [this link}(https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
 
 
 ----
