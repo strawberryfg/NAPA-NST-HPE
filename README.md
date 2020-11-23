@@ -33,15 +33,15 @@ ${DATA_ROOT}
 `-- |-- per_style_training_styles
     |   |   |   | ### Style targets for the per-style training experiment
 `-- |-- stylized_mpii ### Per-style training output (1 trained pose model for 1 style)
-	`-- |-- candy_jpg
-	`-- |-- composition_vii_jpg
-	`-- |-- feathers_jpg
-	`-- |-- la_muse_jpg
-	`-- |-- mosaic_jpg
-	`-- |-- starry_night_crop_jpg
-	`-- |-- the_scream_jpg
-	`-- |-- udnie_jpg
-	`-- |-- wave_crop_jpg
+    `-- |-- candy_jpg
+    `-- |-- composition_vii_jpg
+    `-- |-- feathers_jpg
+    `-- |-- la_muse_jpg
+    `-- |-- mosaic_jpg
+    `-- |-- starry_night_crop_jpg
+    `-- |-- the_scream_jpg
+    `-- |-- udnie_jpg
+    `-- |-- wave_crop_jpg
 `-- |-- h36m
     `-- |-- s_01_act_02_subact_01_ca_01
     |   |   |   | ### subject (s): 01, 05, 06, 07, 08, 09, 11
