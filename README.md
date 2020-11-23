@@ -31,7 +31,7 @@ ${DATA_ROOT}
 `-- |-- allstyles
     |   |   |   | ### All the artistic style images (277 in total)
 `-- |-- per_style_training_styles
-	|   |   |   | ### Style targets for the per-style training experiment
+    |   |   |   | ### Style targets for the per-style training experiment
 `-- |-- stylized_mpii ### Per-style training output (1 trained pose model for 1 style)
 	`-- |-- candy_jpg
 	`-- |-- composition_vii_jpg
