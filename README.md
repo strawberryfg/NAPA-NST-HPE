@@ -54,3 +54,12 @@ ${DATA_ROOT}
 ## Stylized Results
 
 We show style transferred images for human pose dataset MPII below.
+
+
+----
+
+<p align="center">  
+<img src="figs/stylized.png">  
+</p> 
+
+----
