@@ -10,8 +10,7 @@ Check this video:
 
 
 <p align="center">  
-<img src="https://drive.google.com/file/d/1YUGB4ftEhAbMxUqc153zbemg_gSg6ldj/view?usp=sharing
-">  
+<img src="../../figs/mpii_annot_opengl.gif">  
 </p> 
 
 
