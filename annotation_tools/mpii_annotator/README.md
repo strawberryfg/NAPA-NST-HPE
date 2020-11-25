@@ -14,6 +14,8 @@ Check this video:
 </p> 
 
 
+Go to [this link](https://drive.google.com/file/d/1eOHuXdToHIbm2vnRxY13vhrvOjV4SxIe/view?usp=sharing) for the C# GUI video.
+
 ## Screenshots
 
 ##### 3D Keypoints Annotation Interface (OpenGL) #####
