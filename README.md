@@ -39,13 +39,15 @@ GPU cards: GTX 1070, RTX 2080, Google Colab GPUs.
 
 Environment: Unix + Windows (Alienware 15 R3).
 
-IDEs: Anaconda 3, Microsoft Visual Studio 2013 & 2019.
+Tools: Anaconda 3, Microsoft Visual Studio 2013 & 2019.
 
 Deep learning framework: PyTorch 1.6.0
 
 Languages: Python, C++ and C#.
 
 
+
+----
 
 ## Training
 
