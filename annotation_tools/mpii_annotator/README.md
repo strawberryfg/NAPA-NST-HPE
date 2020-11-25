@@ -4,6 +4,17 @@
 
 A detailed report is in this pdf [2D Human Pose Dataset 3D Joint Location Ground Truth Annotation Tool Guideline](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/annotation_tools/mpii_annotator/2D%20Human%20Pose%20Dataset%203D%20Joint%20Location%20Ground%20Truth%20Annotation%20Tool%20Guideline.pdf).
 
+## At a glance
+
+Check this video:
+
+
+<p align="center">  
+<img src="https://drive.google.com/file/d/1YUGB4ftEhAbMxUqc153zbemg_gSg6ldj/view?usp=sharing
+">  
+</p> 
+
+
 ## Screenshots
 
 ##### 3D Keypoints Annotation Interface (OpenGL) #####
