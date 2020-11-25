@@ -1,5 +1,11 @@
-# Train code
+# Train Code
 
-- **train_vgg_mpii_h36m_integral_res18_mask_mympii_coco_hom_bone_img_e2e_render.py**
+- **End-to-end Training**
+  There is only 1 model trained. The style transfer and pose regression are jointly trained.
+
+- **Train 1 Pose Model for 1 Particular Style**
+See [the page](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
+
+
 
   

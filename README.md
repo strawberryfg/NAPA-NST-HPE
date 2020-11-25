@@ -44,7 +44,7 @@ Environment: Unix + Windows (Alienware 15 R3).
 
 Tools: Anaconda 3, Microsoft Visual Studio 2013 & 2019.
 
-Deep learning framework: PyTorch 1.6.0
+Deep learning framework: PyTorch 1.6.0.
 
 Languages: Python, C++ and C#.
 
