@@ -13,6 +13,7 @@ Implementation of "NAPA: Neural Art Human Pose Amplifier".
 
 ## Main Results
 
+### Pose Predictions
 
 ### Stylized Results
 
@@ -22,6 +23,10 @@ We show style transferred images on MPII below. For more output of style-specifi
 <p align="center">  
 <img src="figs/stylized.png">  
 </p> 
+
+## Demo (Testing)
+
+----
 
 ## Training
 
