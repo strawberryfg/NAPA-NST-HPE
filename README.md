@@ -1,4 +1,6 @@
 # NAPA-NST-HPE
+This is the coursework project page for "Computer Vision - CSCI-GA.2271-001" Fall 2020 (https://cs.nyu.edu/~fergus/teaching/vision/index.html).
+ 
 Implementation of "NAPA: Neural Art Human Pose Amplifier".
 
 ----
@@ -8,6 +10,18 @@ Implementation of "NAPA: Neural Art Human Pose Amplifier".
 </p> 
 
 ----
+
+## Main Results
+
+
+### Stylized Results
+
+We show style transferred images on MPII below. For more output of style-specific models (recall the separate training), go to [this link](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
+
+
+<p align="center">  
+<img src="figs/stylized.png">  
+</p> 
 
 ## Training
 
@@ -60,18 +74,5 @@ ${DATA_ROOT}
 `-- |-- testset
 
 ```
-
-----
-
-## Stylized Results
-
-We show style transferred images on MPII below. For more output of style-specific models (recall the separate training), go to [this link](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
-
-
-----
-
-<p align="center">  
-<img src="figs/stylized.png">  
-</p> 
 
 ----
