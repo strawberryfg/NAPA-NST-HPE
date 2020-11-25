@@ -2,7 +2,7 @@
 
 ## Report
 
-A detailed report is in this pdf **2D Human Pose Dataset 3D Joint Location Ground Truth Annotation Tool Guideline**.
+A detailed report is in this pdf [2D Human Pose Dataset 3D Joint Location Ground Truth Annotation Tool Guideline](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/annotation_tools/mpii_annotator/2D%20Human%20Pose%20Dataset%203D%20Joint%20Location%20Ground%20Truth%20Annotation%20Tool%20Guideline.pdf).
 
 ## Screenshots
 
@@ -28,7 +28,7 @@ A detailed report is in this pdf **2D Human Pose Dataset 3D Joint Location Groun
 
 ## Environment
 
-Developed in Visual Studio 2013. Compatible with Visual Studio 2019.
+Developed in Visual Studio 2013. Compatible with Visual Studio 2019 (tested).
 
 ## Build
 
@@ -62,13 +62,15 @@ Build the C# project *ParameterSetttingUI* using *Release* mode.
 
 ## Usage
 
+Essentially it supports 3d annotation with some sort of constraints. There's a C# interface to modify some hyper parameters, and a c++ GUI to do the hefty work.
+
 1. ##### 3d annotation #####
 
-	Used a forward kinematics human model with 2D reprojection error as an intial objective function to obatain a rough estimate of 3D keypoints that matche the 2D (given by MPII) ground truth of one frame.
+	Used a forward kinematics human model with 2D reprojection error as an intial objective function to obatain a rough estimate of 3D keypoints that match the 2D (given by MPII) ground truth of one frame.
 	
 	Let the user interact with keyboard and mouse to make minor changes to a specific keypoint, and visualize 3D in OpenGL; 2D in OpenCV. Provided real-time visualization to reflect up-to-date 3D keypoint location changes.
 
-2. ##### enabled constraints to facilitate the annotation process ####
+2. ##### Enable constraints to facilitate the annotation process ####
 
 	Offered constraints e.g. *pose-conditioned joint angle limit*, *joint angle lower/upper bound* to ensure the pose validity. 
 	
@@ -78,4 +80,4 @@ Build the C# project *ParameterSetttingUI* using *Release* mode.
 	
 	For some DoF, there is an option to use the initial parameter instead of learnable parameter.
 	
-	With constraints above, it's convenient to perform a hierarchical optimization, where torso joints are lined up first and then upper/lower body joints are aligned further.
+	With constraints above, it's convenient to perform a hierarchical optimization, where torso joints are lined up first and then upper/lower body joints are aligned further. Details included in the pdf report.
