@@ -22,7 +22,9 @@ We show style transferred images on MPII below. For more output of style-specifi
 
 <p align="center">  
 <img src="figs/stylized.png">  
-</p> 
+</p>
+ 
+----
 
 ## Demo (Testing)
 
