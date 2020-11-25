@@ -19,6 +19,7 @@ Implementation of "NAPA: Neural Art Human Pose Amplifier".
 
 We show style transferred images on MPII below. For more output of style-specific models (recall the separate training), go to [this link](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
 
+----
 
 <p align="center">  
 <img src="figs/stylized.png">  
@@ -83,3 +84,7 @@ ${DATA_ROOT}
 ```
 
 ----
+
+## Annotation
+
+Check out the demo videos for annotation tools [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/art_img_annotator) and [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/mpii_annotator).
