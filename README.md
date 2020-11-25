@@ -3,6 +3,7 @@ This is the coursework project page for "Computer Vision - CSCI-GA.2271-001" Fal
  
 Implementation of "NAPA: Neural Art Human Pose Amplifier".
 
+**[Remark]**
 Some incomplete preliminary theoretical foundations (*motivations* / *analysis*) can be found in the **Appendix** section of the pdf report. Note this only provides some insights into the choices made as well as the components involved. Please refer to 1. the code 2. the experiments in the main body for a thorough understanding.
 
 ----
