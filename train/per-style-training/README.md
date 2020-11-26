@@ -13,8 +13,18 @@ We show the style transferred images on MPII below:
 
 ----
 
+We also show some failure cases. Note these styles are outside the *9* styles in the original *Perceptual Loss* paper, and the patterns are less evident and distinctively clear than those *9*.
 
-The full stylized images for *9* styles are uploaded [here](https://drive.google.com/drive/u/1/folders/1QOui2S330I63NPktygGJK2w_TBCdV-EI).
+
+----
+
+<p align="center">  
+<img src="../../figs/sty2.png">  
+</p> 
+
+----
+
+The full folder is uploaded [here](https://drive.google.com/drive/u/1/folders/1QOui2S330I63NPktygGJK2w_TBCdV-EI).
 
 They are visually more entertaining than the ones in the joint-training pipeline. So if you want to see something pleasing, dig deeper into the folder above.
 

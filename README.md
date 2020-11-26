@@ -85,6 +85,10 @@ ${DATA_ROOT}
     `-- |-- the_scream_jpg
     `-- |-- udnie_jpg
     `-- |-- wave_crop_jpg
+    `-- |-- 160_png
+    `-- |-- aniene
+    `-- |-- memory
+	
 `-- |-- h36m
     `-- |-- s_01_act_02_subact_01_ca_01
     |   |   |   | ### subject (s): 01, 05, 06, 07, 08, 09, 11
