@@ -70,7 +70,7 @@ Languages: Python, C++ and C#.
 
 ## Training
 
-Follow the steps *missing*, you will get something like this:
+Follow the steps [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train), you will get something like this:
 
 <p align="center">  
 <img src="figs/train_screenshot.png">  
