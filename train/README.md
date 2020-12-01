@@ -45,6 +45,9 @@
   ```
   ----
   
+  ----
+  Some hyper parameters like *batch_size*, *img_size* are high above in the code.
+  ----
   
   
   
