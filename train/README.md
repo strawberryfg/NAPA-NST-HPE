@@ -18,12 +18,15 @@
   self_sup_model_str = '126_1'
   ```
   
-  **3. Place the data**
+  **2. Place the data**
+  
   For **MPII** (Search ```class MPII:```), just put [this](https://drive.google.com/drive/folders/1443ll7Y_mbL0MT4noMkqacdWIDioA7Hc?usp=sharing) *mpii* folder under $root.
   
   For **Human3.6M** (Search ```class Human36M:```), follow the steps listed [here](https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation). Our naming convention stays the same. You might want to change the absolute path ```self.data_dir``` inside this ```class```.
   
-  **2. Start running** ```python train.py```.
+  For the pseudo MPII 3D dataset, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
+  
+  **3. Start running** ```python train.py```.
   
   ----
   
