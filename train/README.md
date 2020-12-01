@@ -3,7 +3,7 @@
 - **End-to-end Training**
   There is only 1 model trained. The style transfer and pose regression are jointly trained.
 
-  ***Train***
+## Train
   
   **1. Load Pretrained Model** (*Search ```load_model()``` function*)
   
