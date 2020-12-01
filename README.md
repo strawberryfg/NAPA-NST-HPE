@@ -16,6 +16,12 @@ Some incomplete preliminary theoretical foundations (*motivations* / *analysis*)
 
 ## Main Results
 
+
+<p align="center">  
+<img src="figs/pred3d.gif">  
+</p>
+
+
 ### Pose Predictions
 
 
