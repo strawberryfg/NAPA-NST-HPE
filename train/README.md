@@ -20,6 +20,28 @@
   
   **2. Start running** ```python train.py```.
   
+  The paths where the weights are saved for net *G*, *G'*, *F*, *F'*:
+  
+  ```
+  if ((cnt - 1) * batch_size) % per_iter_save_num == 0:
+     %%%G
+	 model_file = 'resnet50/model256_mpii_ist_' + str(epoch) + '_' + str(((cnt - 1) * batch_size) // per_iter_save_num) + '.pth'
+     torch.save(model.state_dict(), model_file)
+     
+	 %%%G'
+	 model_2dske_file = 'resnet50/model256_mpii_ist_2dske_to_pose_' + str(epoch) + '_' + str(((cnt - 1) * batch_size) // per_iter_save_num) + '.pth'
+     torch.save(model_2dske.state_dict(), model_2dske_file)
+            
+     %%%F
+	 model_deconv_file = 'resnet50/model256_mpii_ist_deconv_' + str(epoch) + '_' + str(((cnt - 1) * batch_size) // per_iter_save_num) + '.pth'
+     torch.save(model_deconv.state_dict(), model_deconv_file)
+     
+	 %%%F'
+	 model_self_sup_deconv_file = 'resnet50/model256_mpii_ist_self_sup_deconv_' + str(epoch) + '_' + str(((cnt - 1) * batch_size) // per_iter_save_num) + '.pth'
+     torch.save(model_self_sup_deconv.state_dict(), model_self_sup_deconv_file)
+                
+  ```
+  
   
   
 
