@@ -18,7 +18,7 @@
   self_sup_model_str = '126_1'
   ```
   
-  **2. Start running: ```python train.py```.
+  **2. Start running** ```python train.py```.
   
   
   
