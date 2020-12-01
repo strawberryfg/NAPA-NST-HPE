@@ -20,6 +20,8 @@
   
   **2. Start running** ```python train.py```.
   
+  ----
+  
   The paths where the weights are saved for net *G*, *G'*, *F*, *F'*:
   
   ```
@@ -41,6 +43,9 @@
      torch.save(model_self_sup_deconv.state_dict(), model_self_sup_deconv_file)
                 
   ```
+  ----
+  
+  
   
   
   
