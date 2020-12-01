@@ -5,7 +5,7 @@
 
 ## Train
   
-  **1. Load Pretrained Model** (*Search ```load_model()``` function*)
+  **1. Load Pretrained Models** (*Search ```load_model()``` function*)
   
   The weights are shared [here](https://drive.google.com/drive/folders/1S2Iz6N4irphM_pbYcz7YR52MtUbB6pa3?usp=sharing). By default, for the NST image transform net *F*, ```124_4```  is used. For the integral pose regression net *G*, ```118_15``` is adopted to get 2D. The depth regression net *G'* uses ```125_4``` to get depth from 2D-induced bone map. The self supervision net *F'* loads from ```126_1```. 
   
@@ -17,6 +17,11 @@
   model_str = "125_4"
   self_sup_model_str = '126_1'
   ```
+  
+  **3. Place the data**
+  For **MPII** (Search ```class MPII:```), just put [this](https://drive.google.com/drive/folders/1443ll7Y_mbL0MT4noMkqacdWIDioA7Hc?usp=sharing) *mpii* folder under $root.
+  
+  For **Human3.6M** (Search ```class Human36M:```), follow the steps listed [here](https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation). Our naming convention stays the same. You might want to change the absolute path ```self.data_dir``` inside this ```class```.
   
   **2. Start running** ```python train.py```.
   
