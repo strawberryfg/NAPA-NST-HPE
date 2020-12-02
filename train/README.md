@@ -72,6 +72,9 @@ The code was initially developed as one that can be easily transferred to *Googl
 
 There is only one entry point that matters: ```def train(epoch)```.
   
+  
+  
+  ----
 
 - **Train 1 Pose Model for 1 Particular Style**
 See [this page](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train/per-style-training).
