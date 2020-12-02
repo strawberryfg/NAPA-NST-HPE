@@ -24,7 +24,11 @@
   
   For **Human3.6M** (Search ```class Human36M:```), follow the steps listed [here](https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation). Our naming convention stays the same. You might want to change the absolute path ```self.data_dir``` inside this ```class```.
   
-  For the pseudo MPII 3D dataset, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
+  For the **pseudo MPII 3D dataset**, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
+  
+  For the **COCO Train 2017** and **COCO Val 2017**, change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
+ 
+  To disable one dataset during training for convenience, search ```train_list = []``` in the code and you will find all datasets are *appended* one after one.
   
   **3. Start running** ```python train.py```.
   
