@@ -20,13 +20,15 @@
   
   **2. Place the data**
   
+  Go to the Gdrive data link mentioned in the main page: [this](https://drive.google.com/drive/folders/1omDWZeG6zA8GJx5Ij9Y1qJZiY8YYTcFx?usp=sharing).
+  
   For **MPII** (Search ```class MPII:```), just put [this](https://drive.google.com/drive/folders/1443ll7Y_mbL0MT4noMkqacdWIDioA7Hc?usp=sharing) *mpii* folder under $root.
   
   For **Human3.6M** (Search ```class Human36M:```), follow the steps listed [here](https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation). Our naming convention stays the same. You might want to change the absolute path ```self.data_dir``` inside this ```class```.
   
   For the **pseudo MPII 3D dataset**, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
   
-  For the **COCO Train 2017** and **COCO Val 2017**, change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
+  For the **COCO Train 2017** and **COCO Val 2017**, search ```class COCOTrain2017Dataset``` and ```class COCOVal2017Dataset```. Then inside those classes change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
  
   To disable one dataset during training for convenience, search ```train_list = []``` in the code and you will find all datasets are *appended* one after one.
   
