@@ -66,7 +66,11 @@
   ----
   
   
-  
+## Remark
+
+The code was initially developed as one that can be easily transferred to *Google Colab Pro*, and so all code is merged into one big chunk for convenience. However, as the necessity for using Colab faded away (*it is much more difficult to use than a laptop gpu*), it was already too late to change the original design. We do apologize for making this gigantic code file.
+
+There is only one entry point that matters: ```def train(epoch)```.
   
 
 - **Train 1 Pose Model for 1 Particular Style**
