@@ -26,7 +26,7 @@
   
   For **Human3.6M** (Search ```class Human36M:```), follow the steps listed [here](https://github.com/mks0601/Integral-Human-Pose-Regression-for-3D-Human-Pose-Estimation). Our naming convention stays the same. You might want to change the absolute path ```self.data_dir``` inside this ```class```.
   
-  For the **pseudo MPII 3D dataset**, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
+  For the **pseudo MPII 3D dataset**, search ```class MyMPII:``` and modify accordingly ```self.content_path_prefix```, ```self.jt``` as well as ```self.jt_3d``` based on where you put the image folder ```img/``` and 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
   
   For **COCO Train 2017** and **COCO Val 2017**, search ```class COCOTrain2017Dataset``` and ```class COCOVal2017Dataset```. Then inside those classes change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
  
@@ -61,7 +61,7 @@
   
   
   
-  Some hyper parameters like *batch_size*, *img_size* are high above in the code.
+  Some hyper parameters like *batch_size*, *img_size* are high above in the code. Set *folder_prefix*, and then on-the-fly content images / style-transferred images / style targets will be saved to ```content/```, ```opt/```, ```style``` respectively.
   
   ----
   
