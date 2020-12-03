@@ -13,8 +13,7 @@ We show the style transferred images on MPII below:
 
 ----
 
-We also show some failure cases. Note these styles are outside the *9* styles in the original *Perceptual Loss* paper, and the patterns are less evident and distinctively clear than those *9*.
-
+We also show some failure cases. Note these styles are harder to learn.
 
 ----
 
