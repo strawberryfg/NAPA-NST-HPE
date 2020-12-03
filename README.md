@@ -16,6 +16,7 @@ Some incomplete preliminary theoretical foundations (*motivations* / *analysis*)
 
 ## Main Results
 
+Upon first look:
 
 <p align="center">  
 <img src="figs/pred3d.gif">  
@@ -71,6 +72,25 @@ Languages: Python, C++ and C#.
 ## Training
 
 Follow the steps [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/train), you will get something like this:
+
+It's basially 
+
+```
+1. load pretrained model weights (optional if you want to train from scratch but do follow the stepwise training procedure and carefully tune the loss weights. Gradually add more style targets if desired.
+```
+
+```
+2. download data and place into right directories.
+```
+
+```
+3. start training. (set hyper-parameters in the first few lines)
+```
+
+Done~
+
+
+
 
 <p align="center">  
 <img src="figs/train_screenshot.png">  
