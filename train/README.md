@@ -9,7 +9,7 @@
   
   The weights are shared [here](https://drive.google.com/drive/folders/1S2Iz6N4irphM_pbYcz7YR52MtUbB6pa3?usp=sharing). By default, for the NST image transform net *F*, ```124_4```  is used. For the integral pose regression net *G*, ```118_15``` is adopted to get 2D. The depth regression net *G'* uses ```125_4``` to get depth from 2D-induced bone map. The self supervision net *F'* loads from ```126_1```. 
   
-  You can easily change to any one in the model zoos by modifying the first few lines
+  You can easily change to any one in the model zoo by modifying the first few lines
   
   ```
   integral_model_str = '118_15'
@@ -28,7 +28,7 @@
   
   For the **pseudo MPII 3D dataset**, search ```class MyMPII:``` and modify accordingly ```self.jt``` as well as ```self.jt_3d``` based on where you put the 2d annot ```gt_joint_2d_train_all.txt``` and 3d annot ```gt_joint_3d_train_all.txt```.
   
-  For the **COCO Train 2017** and **COCO Val 2017**, search ```class COCOTrain2017Dataset``` and ```class COCOVal2017Dataset```. Then inside those classes change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
+  For **COCO Train 2017** and **COCO Val 2017**, search ```class COCOTrain2017Dataset``` and ```class COCOVal2017Dataset```. Then inside those classes change ```self.img_dir``` and ```self.annot_path``` according to your image path and json annotation path.
  
   To disable one dataset during training for convenience, search ```train_list = []``` in the code and you will find all datasets are *appended* one after one.
   
@@ -68,9 +68,9 @@
   
 ## Remark
 
-The code was initially developed as one that can be easily transferred to *Google Colab Pro*, and so all code is merged into one big chunk for convenience. However, as the necessity for using Colab faded away (*it is much more difficult to use than a laptop gpu*), it was already too late to change the original design. We do apologize for making this gigantic code file.
+The code was initially developed as one that can be easily transferred to *Google Colab Pro*, and so all code was merged into one big chunk for convenience. However, as the necessity for using Colab faded away (*it is much more difficult to use than a laptop gpu*), it was already too late to change the original design. We do apologize for making this gigantic code file.
 
-There is only one entry point that matters: ```def train(epoch)```.
+That said, there is only one entry point that matters: ```def train(epoch)```.
   
   
   
