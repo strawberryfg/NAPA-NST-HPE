@@ -152,6 +152,18 @@ ${DATA_ROOT}
 
 ----
 
+## Sample Styles
+
+
+<p align="center">  
+<img src="figs/allstyles.png">  
+</p> 
+
+
+
+
+----
+
 ## Annotation
 
 Check out the demo videos for annotation tools [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/art_img_annotator) and [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/mpii_annotator).
