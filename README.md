@@ -196,7 +196,7 @@ ${DATA_ROOT}
 
 ----
 
-## Annotation
+## Annotations
 
 Check out the demo videos for annotation tools [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/art_img_annotator) and [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/mpii_annotator).
 
