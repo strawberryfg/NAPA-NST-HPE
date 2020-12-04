@@ -3,6 +3,11 @@
 
 ## Test
 
+<p align="center">  
+<img src="../figs/test.gif">  
+</p> 
+
+
  **1. Load pretrained models** (*Search ```load_model()``` function*)
   
   Set 
