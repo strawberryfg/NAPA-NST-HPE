@@ -1,6 +1,8 @@
 #from nets.balanced_parallel import DataParallelModel, DataParallelCriterion
-folder_prefix = 'm135_16'
-model_str = "135_16"
+folder_prefix = 'm146_7'
+model_str = "146_7"
+batch_size = 10
+
 import math
 import random
 import torch
@@ -341,7 +343,6 @@ output_shape = img_size // 4
 bbox_3d_shape = (2000, 2000, 2000) # depth, height, width
 depth_dim = 64
     
-batch_size = 10
 pixel_mean = (0.485, 0.456, 0.406)
 pixel_std = (0.229, 0.224, 0.225)
 
