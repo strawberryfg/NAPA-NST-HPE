@@ -203,7 +203,7 @@ Check out the demo videos for annotation tools [here](https://github.com/strawbe
 
 ----
 
-## Visulization Tool 
+## Visualization Tool 
 
 We also provide a fancier C++ OpenGL visualization tool under [```VisTool```](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/VisTool/VisNST3D) to visualize the 3D. You can rotate (R) and translate (T) the coordinate system yourself freely.
 The design logic is similar to the MPII annotator [here](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/annotation_tools/mpii_annotator/2D%20Human%20Pose%20Dataset%203D%20Joint%20Location%20Ground%20Truth%20Annotation%20Tool%20Guideline.pdf).
