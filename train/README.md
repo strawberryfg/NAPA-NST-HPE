@@ -5,7 +5,7 @@
 
 
 <p align="center">  
-<img src="figs/run_train_1.gif">  
+<img src="../figs/run_train_1.gif">  
 </p> 
 
 
