@@ -25,3 +25,5 @@ annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabele
 *.lock
 *.ide
 *.ipch
+*.VC
+*.log
