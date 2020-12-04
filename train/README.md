@@ -13,7 +13,7 @@ See [this link](https://drive.google.com/file/d/12fyMhjZA9MX-yjxfeE46IvAtm7nWJsv
 
 ## Train
   
-  **1. Load Pretrained Models** (*Search ```load_model()``` function*)
+  **1. Load pretrained models** (*Search ```load_model()``` function*)
   
   The weights are shared [here](https://drive.google.com/drive/folders/1S2Iz6N4irphM_pbYcz7YR52MtUbB6pa3?usp=sharing). By default, for the NST image transform net *F*, ```124_4```  is used. For the integral pose regression net *G*, ```118_15``` is adopted to get 2D. The depth regression net *G'* uses ```125_4``` to get depth from 2D-induced bone map. The self supervision net *F'* loads from ```126_1```. 
   
