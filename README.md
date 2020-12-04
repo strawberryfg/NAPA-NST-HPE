@@ -49,6 +49,29 @@ We show style transferred images on MPII below. For more output of style-specifi
 
 ## Demo (Testing)
 
+
+
+<p align="center">  
+<img src="figs/test.gif">  
+</p> 
+
+
+
+Put data under ```testset/```, and follow [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/test).
+It's a simple process of loading weights and saving 
+
+```
+1. Overlaid 2d on test image. 
+```
+
+```
+2. Predicted 2d joint coordinates.
+```
+
+```
+3. Predicted 3d joint coordinates and the Python figures.
+```
+
 ----
 
 ## Environment
@@ -79,6 +102,14 @@ Follow the steps [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/t
 <p align="center">  
 <img src="figs/train_screenshot.png">  
 </p> 
+
+
+
+
+<p align="center">  
+<img src="figs/run_train_1.gif">  
+</p> 
+
 
 
 It's basially 
