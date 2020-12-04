@@ -3,6 +3,8 @@
 - **End-to-end Training**
   There is only 1 model trained. The style transfer and pose regression are jointly trained.
 
+https://github.com/strawberryfg/NAPA-NST-HPE
+
 ## Train
   
   **1. Load Pretrained Models** (*Search ```load_model()``` function*)
