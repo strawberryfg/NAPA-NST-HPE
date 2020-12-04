@@ -178,6 +178,7 @@ ${DATA_ROOT}
     `-- |-- gt_joint_3d_train_all.txt
     |   |   |   | ### Pseudo 3D ground truth of MPIi
 `-- |-- testset
+    |   |   | ### Our hand-crafted test set of 282 images.
 
 ```
 
