@@ -27,3 +27,5 @@ annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabele
 *.ipch
 *.VC
 *.log
+*.VC.db
+*.db
