@@ -1,0 +1,106 @@
+﻿  VisNST3D.cpp
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: roll function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: pitch function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: yaw function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: angle function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: angleAxis function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate_slow function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: perspectiveFov function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: infinitePerspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: tweakedInfinitePerspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: polar function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: euclidean function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateX function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateY function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateZ function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateX function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateX function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateZ function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotateZ function taking degrees as parameters is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: angle function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: angle function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: orientedAngle function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: orientedAngle function returning degrees is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(414,23): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(414,19): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(414,38): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(414,34): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(436,23): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(436,19): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(436,38): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(436,34): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(457,23): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(457,19): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(457,38): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(457,34): warning C4244: 'argument': conversion from 'double' to '_Tp', possible loss of data
+          with
+          [
+              _Tp=int
+          ]
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,32): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,32): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,74): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,74): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,116): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(509,116): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(512,41): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(515,87): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(515,62): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(515,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(516,87): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(516,62): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+D:\VisNST3D\VisNST3D\VisNST3D.cpp(516,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating code
+  1 of 318 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  VisNST3D.vcxproj -> D:\VisNST3D\Release\VisNST3D.exe
