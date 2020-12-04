@@ -4,6 +4,11 @@
   There is only 1 model trained. The style transfer and pose regression are jointly trained.
 
 
+<p align="center">  
+<img src="figs/run_train_1.gif">  
+</p> 
+
+
 See [this link](https://drive.google.com/file/d/12fyMhjZA9MX-yjxfeE46IvAtm7nWJsv1/view?usp=sharing) for a quick look on the recorded video.
 
 ## Train
