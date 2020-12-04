@@ -201,6 +201,17 @@ ${DATA_ROOT}
 Check out the demo videos for annotation tools [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/art_img_annotator) and [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/annotation_tools/mpii_annotator).
 
 
+<p align="center">  
+<img src="figs/art_annot.gif">  
+</p> 
+
+
+<p align="center">  
+<img src="figs/mpii_annot_opengl.gif">  
+</p> 
+
+
+
 ----
 
 ## Visualization Tool 
