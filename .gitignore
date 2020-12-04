@@ -29,3 +29,4 @@ annotation_tools/mpii_annotator/ThreeDGroundTruthLabeler/ThreeDGroundTruthLabele
 *.log
 *.VC.db
 *.db
+*.sln
