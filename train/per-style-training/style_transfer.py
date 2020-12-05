@@ -12,7 +12,7 @@ import torchvision.models as models
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader, Dataset
 
-from models import ImageTransformationNetwork, LossNetwork, ResidualBlock
+from models import *
 from utils import MyDataset, MPIIDataset, load_image, save_image, gram_matrix, normalize_batch
 from mpii import MPII
 import os
@@ -22,11 +22,13 @@ def main():
     parser.add_argument('--batch-size', type=int, default=4, action='store')
     parser.add_argument('--epochs', type=int, default=2, action='store')
     parser.add_argument('--content-weight', action='store', type=float, default=1e5)
-    parser.add_argument('--si', action='store', type=str, default='173.png')
+    parser.add_argument('--si', action='store', type=str, default='la_muse.jpg')
     parser.add_argument('--style-weight', action='store', type=float, default=1e10)
+    parser.add_argument('--style-path', action='store', type=str, default='/allstyles')
+    parser.add_argument('--cuda', action='store_true', default=False)
     args = parser.parse_args()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     batch_size = args.batch_size
     learning_rate = 1e-3
@@ -36,6 +38,7 @@ def main():
     log_interval = 100
 
     transformer = ImageTransformationNetwork().to(device)   
+        
     optimizer = optim.Adam(transformer.parameters(), learning_rate)
     mse_loss = torch.nn.MSELoss()
 
@@ -57,7 +60,7 @@ def main():
 
     style_image = args.si
     print(style_image)
-    style_path = '/scratch/ozl201/Vision/allstyles/'
+    style_path = args.style_path
     style = load_image(os.path.join(style_path, style_image))
     style_transform = transforms.Compose([
         transforms.ToTensor(),
@@ -112,12 +115,16 @@ def main():
             if count == len(train_dataset):
                 transformer.eval().cpu()
                 save_model_filename = style_image.replace('.', '_') + "_epoch_" + str(e+1) + "_CW_" + "{:.0e}".format(content_weight) + "_SW_" + "{:.0e}".format(style_weight) + ".model"
-                save_model_path = os.path.join('/scratch/ozl201/Vision/style_weights/', save_model_filename)
+                save_model_path = os.path.join(os.path.abspath('style_weights'), save_model_filename)
                 torch.save(transformer.state_dict(), save_model_path)
                 transformer.to(device).train()
     transformer.eval().cpu()
     save_model_filename = style_image.replace('.', '_') + "_epoch_" + str(epochs) + "_CW_" + "{:.0e}".format(content_weight) + "_SW_" + "{:.0e}".format(style_weight) + ".model"
-    save_model_path = os.path.join('/scratch/ozl201/Vision/style_weights/', save_model_filename)
+    
+    if not os.path.isdir(os.path.abspath('style_weights')):
+        os.mkdir(os.path.abspath('style_weights'))
+    
+    save_model_path = os.path.join(os.path.abspath('style_weights'), save_model_filename)
     torch.save(transformer.state_dict(), save_model_path)
 
     print("\nDone, trained model saved at", save_model_filename)

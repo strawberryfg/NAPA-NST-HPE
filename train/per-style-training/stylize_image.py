@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 import time
 import random
 
-from models import ImageTransformationNetwork
+from models import *
 from utils import load_image, save_image
 
 def main():
@@ -15,10 +15,13 @@ def main():
     parser.add_argument('--w', action='store')
     parser.add_argument('--i', action='store')
     parser.add_argument('--s', action='store', default=0, type = int)
-    parser.add_argument('--sw', action='store', default='1e+11')
+    parser.add_argument('--sw', action='store', default='5e+10')
+    parser.add_argument('--cw', action='store', default='1e+05')
+    parser.add_argument('--cuda', action='store_true', default=False)
+    parser.add_argument('--output-folder', action='store', type = str, default='/scratch/ozl201/Vision/mpii/outputs/')
     args = parser.parse_args()
     
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
     
     weights = args.w
     image = args.i
@@ -26,19 +29,21 @@ def main():
     sw = args.sw
     
     weights = weights.replace('.', '_')
-    
+
     model = ImageTransformationNetwork().to(device)
-    weights_path = '/scratch/ozl201/Vision/style_weights/' + weights + '_epoch_2_CW_1e+05_SW_' + sw + '.model'
+    weights_filename = weights + '_epoch_2_CW_' + args.cw + '_SW_' + sw + '.model'
+    
+    weights_path = os.path.join(os.path.abspath('style_weights'), weights_filename)
     model.load_state_dict(torch.load(weights_path))
     
-    output_folder = '/scratch/ozl201/Vision/mpii/outputs/' + weights + '/'
+    output_folder = args.output_folder + weights + '/'
     
     if not os.path.isdir(output_folder):
         os.mkdir(output_folder)
     
     completed_images = [p for p in os.listdir(output_folder)]
     
-    image_folder_path = '/scratch/ozl201/Vision/mpii/images/'
+    image_folder_path = os.path.abspath('mpii/images/')
     images = [p for p in os.listdir(image_folder_path)]
     
     if sample > 0:
@@ -85,7 +90,7 @@ def main():
                 print("Image time: {}".format(t1-t0))
                 image_time += t1-t0
     
-    print("Average time: {}".format(image_time/len(images))
+    print("Average time: {}".format(image_time/len(images)))
     
 
 if __name__ == "__main__":
