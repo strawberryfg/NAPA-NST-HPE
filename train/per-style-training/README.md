@@ -8,7 +8,11 @@ We show the style transferred images on MPII below:
 ----
 
 <p align="center">  
-<img src="../../figs/sty.png">  
+<img src="../../figs/style_per.png">  
+</p> 
+
+<p align="center">  
+<img src="../../figs/style_per2.png">  
 </p> 
 
 ----
