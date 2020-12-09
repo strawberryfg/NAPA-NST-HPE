@@ -10,6 +10,8 @@
 
  **1. Load pretrained models** (*Search ```load_model()``` function*)
   
+  Weights are under ```pretrained_weights/``` folder of the shared ```datasets``` folder [here](https://drive.google.com/drive/folders/1S2Iz6N4irphM_pbYcz7YR52MtUbB6pa3?usp=sharing).
+  
   Set 
   
   ```
