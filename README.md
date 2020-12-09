@@ -71,7 +71,7 @@ We show style transferred images on MPII below. For more output of style-specifi
 
 
 
-Put data under ```testset/```, and follow [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/test).
+Put data under ```testset/```, download weights from ```pretrained_weights```, and follow [here](https://github.com/strawberryfg/NAPA-NST-HPE/tree/main/test).
 It's a simple process of loading weights and saving 
 
 ```
