@@ -218,6 +218,8 @@ ${DATA_ROOT}
     |   |   |   | ### Pseudo 3D ground truth of MPIi
 `-- |-- testset
     |   |   | ### Our hand-crafted test set of 282 images.
+`-- |-- pertrained_weights
+    |   |   | ### Pretrained PyTorch model weights.
 
 ```
 
