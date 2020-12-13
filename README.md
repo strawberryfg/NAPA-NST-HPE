@@ -265,7 +265,7 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 ----
 
-## Special Thanks
+## Special Thanks to
 
 - *MATH-GA.2310-001 Topology I* at Courant Institute of Mathematical Sciences for inspiration.
 
@@ -275,5 +275,5 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 - *Museums* for recreation.
 
-- *[Jianqi Ma](https://scholar.google.com/citations?user=kQUJjQQAAAAJ&hl=en)* for fruitful discussions.
+- *[Jianqi Ma](https://scholar.google.com/citations?user=kQUJjQQAAAAJ&hl=en)* for fruitful discussions and valuable feedback.
 
