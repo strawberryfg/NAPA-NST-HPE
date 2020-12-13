@@ -275,5 +275,5 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 - *Museums* for recreation.
 
-- *Jianqi Ma* for fruitful discussions.
+- *[Jianqi Ma](https://scholar.google.com/citations?user=kQUJjQQAAAAJ&hl=en)* for fruitful discussions.
 
