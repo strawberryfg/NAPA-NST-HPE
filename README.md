@@ -92,7 +92,7 @@ It's a simple process of loading weights and saving
 
 ----
 
-GPU cards: GTX 1070, RTX 2080, Google Colab GPUs.
+GPU cards: GTX 1070, RTX 2080, Tesla K80, Google Colab GPUs.
 
 Environment: Unix + Windows (Alienware 15 R3).
 
