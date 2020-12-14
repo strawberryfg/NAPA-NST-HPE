@@ -269,6 +269,8 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 - *MATH-GA.2310-001 Topology I* at Courant Institute of Mathematical Sciences for inspiration.
 
+- *NYC* for inspiration.
+
 - *eBay* for selling electronics.
 
 - *Bobst* library for delivery.
