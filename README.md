@@ -7,7 +7,7 @@ Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 > Qingfu Wan, Oliver Lu        
 > *arXiv technical report ([arXiv](https://arxiv.org/list/cs.CV/recent))* 
 
-[[`paper`](https://arxiv.org/list/cs.CV/recent)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)]
+[[`paper`](https://arxiv.org/list/cs.CV/recent)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)]
 
 
 
