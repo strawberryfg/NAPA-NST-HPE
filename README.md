@@ -291,5 +291,7 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 - *Museums* for recreation.
 
+- *Adobe Premiere*.
+
 - *[Jianqi Ma](https://scholar.google.com/citations?user=kQUJjQQAAAAJ&hl=en)* for fruitful discussions and valuable feedback.
 
