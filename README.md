@@ -9,7 +9,7 @@ Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 
 [[`paper`](https://arxiv.org/list/cs.CV/recent)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)] [[`4-page Slide`](https://docs.google.com/presentation/d/1VBy-R26ikunJzPm3MDeKWewnXbuFWnAx97RRhtPb874/edit?usp=sharing)]
 
-[[`Training Video`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/run_train_1.gif)] [[`Testing Video`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/test.gif)] [[`Artwork Annotator`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/art_annot.gif)] [[`Pseudo 3D Label Annotator (OpenGL)`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/mpii_annot_opengl.gif)] 
+[[`Training Video`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/run_train_1.gif)] [[`Testing Video`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/test.gif)] [[`Artwork Annotator`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/art_annot.gif)] [[`Pseudo 3D Label Annotator (OpenGL)`](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/figs/mpii_annot_opengl.gif)] [[`Pseudo 3D Label Annotator (GUI)`](https://drive.google.com/file/d/1eOHuXdToHIbm2vnRxY13vhrvOjV4SxIe/view)] 
 
 
 ----
