@@ -1,7 +1,7 @@
 # NAPA-NST-HPE
 This is the coursework project page for "Computer Vision - CSCI-GA.2271-001" Fall 2020 (https://cs.nyu.edu/~fergus/teaching/vision/index.html) at NYU Courant.
  
-Implementation of "NAPA: Neural Art Human Pose Amplifier".
+Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 
 > [**NAPA: Neural Art Human Pose Amplifier**](https://arxiv.org/list/cs.CV/recent),            
 > Qingfu Wan, Oliver Lu        
