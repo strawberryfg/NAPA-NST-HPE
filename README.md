@@ -108,7 +108,7 @@ It's a simple process of loading weights and saving
 
 GPU cards: GTX 1070, RTX 2080, Tesla K80, Google Colab GPUs.
 
-Environment: Unix + Windows (Alienware 15 R3).
+Environment: Unix + Windows (Alienware 15 R3). (All the stuff should work on Ubuntu)
 
 Tools: Anaconda 3, Microsoft Visual Studio 2013 & 2019.
 
