@@ -8,14 +8,18 @@ Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 > *arXiv technical report ([arXiv](https://arxiv.org/list/cs.CV/recent))* 
 
 
-**[Remark]**
-Some incomplete preliminary theoretical foundations (*motivations* / *analysis*) can be found in the **Appendix** section of the pdf report, where we try to dissect through the lens of topological spaces. Note this only provides some insights into the choices made as well as the components involved. Please refer to 1. the code 2. the experiments in the main body for a thorough understanding.
 
 ----
 
 <p align="center">  
 <img src="figs/pipeline.png">  
 </p> 
+
+
+
+
+**[Remark]**
+Some incomplete preliminary theoretical foundations (*motivations* / *analysis*) can be found in the **Appendix** section of the pdf report, where we try to dissect through the lens of topological spaces. Note this only provides some insights into the choices made as well as the components involved. Please refer to 1. the code 2. the experiments in the main body for a thorough understanding.
 
 ----
 
