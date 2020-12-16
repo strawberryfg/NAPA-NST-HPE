@@ -7,7 +7,7 @@ Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 > Qingfu Wan, Oliver Lu        
 > *arXiv technical report (`course project report`) ([arXiv](https://arxiv.org/abs/2012.08501))* 
 
-[[`Paper`](https://arxiv.org/abs/2012.08501)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)] [[`4-page Slide`](https://docs.google.com/presentation/d/1VBy-R26ikunJzPm3MDeKWewnXbuFWnAx97RRhtPb874/edit?usp=sharing)] [[`Datasets`](https://drive.google.com/drive/folders/1omDWZeG6zA8GJx5Ij9Y1qJZiY8YYTcFx?usp=sharing)] 
+[[`Paper`](https://arxiv.org/pdf/2012.08501.pdf)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)] [[`4-page Slide`](https://docs.google.com/presentation/d/1VBy-R26ikunJzPm3MDeKWewnXbuFWnAx97RRhtPb874/edit?usp=sharing)] [[`Datasets`](https://drive.google.com/drive/folders/1omDWZeG6zA8GJx5Ij9Y1qJZiY8YYTcFx?usp=sharing)] 
 
 Trailers:
 
@@ -275,7 +275,18 @@ We also provide a fancier C++ OpenGL visualization tool under [```VisTool```](ht
 The design logic is similar to the MPII annotator [here](https://github.com/strawberryfg/NAPA-NST-HPE/blob/main/annotation_tools/mpii_annotator/2D%20Human%20Pose%20Dataset%203D%20Joint%20Location%20Ground%20Truth%20Annotation%20Tool%20Guideline.pdf).
 
 
+----
 
+## Bibtex
+
+@misc{wan2020napa,
+      title={NAPA: Neural Art Human Pose Amplifier}, 
+      author={Qingfu Wan and Oliver Lu},
+      year={2020},
+      eprint={2012.08501},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 
 ----
 
