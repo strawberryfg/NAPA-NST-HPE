@@ -46,6 +46,11 @@ Upon first look:
 <img src="figs/pred3d.png">  
 </p>
  
+
+<p align="center">  
+<img src="figs/pred2drevised.png">  
+</p>
+ 
 ----
 
 
