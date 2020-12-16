@@ -3,7 +3,7 @@ This is the coursework project page for "Computer Vision - CSCI-GA.2271-001" Fal
  
 Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 
-> [**NAPA: Neural Art Human Pose Amplifier**](https://arxiv.org/list/cs.CV/recent),            
+> [**NAPA: Neural Art Human Pose Amplifier**](https://arxiv.org/pdf/2012.08501.pdf),            
 > Qingfu Wan, Oliver Lu        
 > *arXiv technical report (`course project report`) ([arXiv](https://arxiv.org/abs/2012.08501))* 
 
