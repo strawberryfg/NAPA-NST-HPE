@@ -7,7 +7,7 @@ Implementation of **"NAPA: Neural Art Human Pose Amplifier"**.
 > Qingfu Wan, Oliver Lu        
 > *arXiv technical report (`course project report`) ([arXiv](https://arxiv.org/abs/2012.08501))* 
 
-[[`Paper`](http://www.qingfuwan.com/uploads/1/1/5/6/115646345/napa.pdf)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)] [[`4-page Slide`](https://docs.google.com/presentation/d/1VBy-R26ikunJzPm3MDeKWewnXbuFWnAx97RRhtPb874/edit?usp=sharing)] [[`Datasets`](https://drive.google.com/drive/folders/1omDWZeG6zA8GJx5Ij9Y1qJZiY8YYTcFx?usp=sharing)] 
+[[`Paper`](http://www.qingfuwan.com/uploads/1/1/5/6/115646345/napaf.pdf)] [[`2-min Video`](https://drive.google.com/file/d/1C0pw2HUWV5jHSRNZ-zBP8hW7f8Dl5HZ7/view?usp=sharing)] [[`10-sec Preview`](https://youtu.be/6eo4UgWpQxY)] [[`4-page Slide`](https://docs.google.com/presentation/d/1VBy-R26ikunJzPm3MDeKWewnXbuFWnAx97RRhtPb874/edit?usp=sharing)] [[`Datasets`](https://drive.google.com/drive/folders/1omDWZeG6zA8GJx5Ij9Y1qJZiY8YYTcFx?usp=sharing)] 
 
 Trailers:
 
