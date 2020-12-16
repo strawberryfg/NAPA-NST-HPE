@@ -279,14 +279,14 @@ The design logic is similar to the MPII annotator [here](https://github.com/stra
 
 ## Bibtex
 
-@misc{wan2020napa,
+    @misc{wan2020napa,
       title={NAPA: Neural Art Human Pose Amplifier}, 
       author={Qingfu Wan and Oliver Lu},
       year={2020},
       eprint={2012.08501},
       archivePrefix={arXiv},
       primaryClass={cs.CV}
-}
+    }
 
 ----
 
